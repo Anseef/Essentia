@@ -6,7 +6,7 @@ import FoodBlock from '../../components/FoodBlock/FoodBlock'
 import { LinearGradient } from 'expo-linear-gradient'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
-const Homepage = () => {
+const FoodSelection = () => {
   return (
     <SafeAreaView style = {styles.container}>
         
@@ -94,4 +94,4 @@ const styles = StyleSheet.create({
 
 })
 
-export default Homepage
+export default FoodSelection

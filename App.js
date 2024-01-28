@@ -1,7 +1,7 @@
 import { StyleSheet, View } from 'react-native';
 import { useFonts } from 'expo-font';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import FoodDetails from './screens/Food/FoodDetails';
+import FoodDescription from './screens/Food/FoodDescription';
 
 export default function App() {
 
@@ -19,7 +19,7 @@ export default function App() {
 
   return (
     <SafeAreaProvider>
-      <FoodDetails />
+      <FoodDescription />
     </SafeAreaProvider>
   );
 

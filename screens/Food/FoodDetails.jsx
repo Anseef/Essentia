@@ -1,4 +1,4 @@
-import { View, Text, TextInput,StyleSheet,TouchableOpacity, Touchable } from 'react-native'
+import { View, Text, TextInput,StyleSheet,TouchableOpacity } from 'react-native'
 import React from 'react'
 import CommonNavBar from '../../components/Navbar/CommonNavBar'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -10,7 +10,7 @@ import SelectedFoods from '../../components/FoodBlock/SelectedFoods'
 const FoodDetails = () => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#f1f4f8' }}>
-      <CommonNavBar />
+      <CommonNavBar value = { "Breakfast"}/>
 
         <LinearGradient colors={["#836cdd", "#d0cae9" ]} style = {[ styles.innerDivContainer, styles.shadowProp ]}>
             <View style = {{ flexDirection: 'row'}}>
@@ -37,7 +37,8 @@ const FoodDetails = () => {
                     height ={ 9 }
                     borderRadius = { 10 }
                     borderWidth = { 0 }
-                    animated = { true } />
+                    animated = { true } 
+                />
 
             </View>
 
@@ -112,7 +113,7 @@ const  styles = StyleSheet.create({
         borderRadius: 8,
         alignItems: 'center',
         marginTop: 10,
-    },
+    }
 
 })
 export default FoodDetails
