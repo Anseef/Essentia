@@ -1,29 +1,33 @@
 import React from 'react';
 import { View, Text, StyleSheet,StatusBar } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-const Navbar = () => {
+const CommonNavBar = () => {
   return (
-    <>
+    <SafeAreaView>
         <StatusBar backgroundColor={ '#836cdd' } />
         <View style={styles.container}>
           <Text style={styles.textDiv}>{"back"}</Text>
-          <Text style={[styles.logoText, styles.textDiv]}>Essent!a</Text>
-          <Text style={styles.textDiv}>Profile</Text>
+          <Text style={[styles.logoText, styles.textDiv]}>Breakfast</Text>
         </View>
-    </>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'left',
     alignItems:'baseline',
-    padding:20,
-    paddingTop:0,
-
+    paddingLeft:20,
+    paddingRight:20,
+    paddingTop:8,
+    backgroundColor: '#836cdd',
+    
   },
+  
   logoText: {
+    paddingLeft:10,
     fontFamily: 'Bold',
     fontSize: 17,
   },
@@ -33,4 +37,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Navbar;
+export default CommonNavBar;

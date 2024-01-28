@@ -26,7 +26,7 @@ export class CalorieCard extends Component {
 const styles = StyleSheet.create({
     container: {
         flexDirection:'row',
-        justifyContent:'space-around'
+        justifyContent:'space-between'
     },
     cardContainer: {
         width:100,
@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
         fontFamily:'SemiBold',
     },
     cardContent: {
-        fontFamily:'Regular',
+        fontFamily:'Medium',
         color: '#57636c'
     }
 })

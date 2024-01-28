@@ -1,6 +1,7 @@
 import { StyleSheet, View } from 'react-native';
-import Homepage from './screens/Root/Homepage';
 import { useFonts } from 'expo-font';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import FoodDetails from './screens/Food/FoodDetails';
 
 export default function App() {
 
@@ -17,9 +18,9 @@ export default function App() {
   if(!loaded) return null;
 
   return (
-    <View style={styles.container}>
-      <Homepage />
-    </View>
+    <SafeAreaProvider>
+      <FoodDetails />
+    </SafeAreaProvider>
   );
 
 }
