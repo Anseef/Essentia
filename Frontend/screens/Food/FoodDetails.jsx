@@ -1,4 +1,5 @@
-import { View, Text, TextInput,StyleSheet,TouchableOpacity } from 'react-native'
+import axios from 'axios';
+import { View, Text, TextInput,StyleSheet,ScrollView, Pressable } from 'react-native'
 import React from 'react'
 import CommonNavBar from '../../components/Navbar/CommonNavBar'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -6,80 +7,127 @@ import CalorieCard from '../../components/CalorieCard'
 import { LinearGradient } from "expo-linear-gradient";
 import * as Progress from 'react-native-progress'
 import SelectedFoods from '../../components/FoodBlock/SelectedFoods'
+import { useState } from 'react'
 
 const FoodDetails = () => {
-  return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#f1f4f8' }}>
-      <CommonNavBar value = { "Breakfast"}/>
 
-        <LinearGradient colors={["#836cdd", "#d0cae9" ]} style = {[ styles.innerDivContainer, styles.shadowProp ]}>
-            <View style = {{ flexDirection: 'row'}}>
-                <TextInput
-                    placeholder="Search Food"
-                    style={ styles.searchField }
-                />
-                 <TouchableOpacity  autoFocus={false} style={ { position: 'absolute',top: 14,left: 12}} onPress={() => console.log('Button pressed')}>
-                     <Text style={{ color: '#57636c' }}>.</Text>
-                </TouchableOpacity >
-            </View>
+    const [dataset, setDataSet] = useState([]);
+    const [food, setFood] = useState('');
+    const [viewMore, setViewMore] = useState(false);
+    const [selectedFoods, setSelectedFoods] = useState([]);
 
-            <View style = {{ paddingTop: 10,paddingBottom: 15}}>
-                <View style = {{ flexDirection: 'row',justifyContent:'space-between',paddingBottom: 10}}>
-                    <Text style = { styles.progressBarText } > Daily intake</Text>
-                    <Text  style = { styles.progressBarText } >1278/2974kcal</Text>
+    // Fetch food data from backend
+
+    const fetchData = async () => {
+        try {
+          const response = await axios.post("http://192.168.43.208:8000/data", { food });
+          setDataSet(response.data);
+        } catch (e) {
+          console.log(e);
+        }
+    }
+    // store foodDataset from backend
+    console.log(food)
+    
+    return (
+        <SafeAreaView style={{ flex: 1, backgroundColor: '#f1f4f8' }}>
+            <CommonNavBar value = { "Breakfast"}/>
+
+                <View style={{ flexDirection: 'row', backgroundColor: '#836cdd', padding:20,paddingTop: 0 }}>
+                    <TextInput
+                        placeholder="Search Food"
+                        style={styles.searchField}
+                        onChangeText={(text) => { 
+                            setFood(text)
+                            fetchData()
+                         }}
+                        value = { food }
+                    />
+                    {food !== '' &&
+                        <Pressable
+                            autoFocus={false}
+                            style={{ alignSelf:'center', right: 30 }}
+                            onPress={() => {
+                                setFood('');
+                            }}
+                        >
+                            <Text style={{ color: '#57636c',fontFamily: 'SemiBold' }}>X</Text>
+                        </Pressable>
+                    }
                 </View>
+            { food === '' ? (
+                <View>
+                    <LinearGradient colors={["#836cdd", "#d0cae9" ]} style = {[ styles.innerDivContainer, styles.shadowProp ]}>
+                        <View style = {{paddingBottom: 8}}>
+                            <View style = {{ flexDirection: 'row',justifyContent:'space-between',paddingBottom: 10}}>
+                                <Text style = { styles.progressBarText } > Daily intake</Text>
+                                <Text  style = { styles.progressBarText } >1278/2974kcal</Text>
+                            </View>
 
-                <Progress.Bar 
-                    progress={0.6}
-                    width={375}
-                    color = { '#836cdd'}
-                    unfilledColor={ '#d9d4f6'}
-                    height ={ 9 }
-                    borderRadius = { 10 }
-                    borderWidth = { 0 }
-                    animated = { true } 
-                />
+                            <Progress.Bar 
+                                progress={0.6}
+                                width={375}
+                                color = { '#836cdd'}
+                                unfilledColor={ '#d9d4f6'}
+                                height ={ 9 }
+                                borderRadius = { 10 }
+                                borderWidth = { 0 }
+                                animated = { true } 
+                            />
+                        </View>
 
-            </View>
+                        <View style={{ paddingTop: 10 }}>
+                            <CalorieCard/>
+                        </View>
+                            
+                    </LinearGradient>
 
-            <View style={{ paddingTop: 10 }}>
-                <CalorieCard/>
-            </View>
-            
-        </LinearGradient>
+                    <View style = { styles.selectedFoodContainer }>
 
-        {/* Main portion */}
+                        <Text style = { { fontFamily: 'SemiBold', fontSize:14,paddingBottom: 10} }>You have Tracked</Text>
 
-        <View style = { styles.selectedFoodContainer }>
+                        <View style = {{gap: 15}}>
+                            <SelectedFoods />
+                            <SelectedFoods />
+                            <SelectedFoods />
+                            <SelectedFoods />
+                        </View>
 
-            <Text style = { { fontFamily: 'SemiBold', fontSize:14,paddingBottom: 10} }>You have Tracked</Text>
+                        <Pressable  style={[styles.button]} onPress={() => console.log('Button pressed')}>
+                            <Text style={{ color: '#d9d4f6',fontFamily:'SemiBold',fontSize: 14 }}>Done</Text>
+                        </Pressable >
+                    </View>
+                </View>
+                ):
+                (<View style= { { flex: 1 }}>
+                    <ScrollView style={{ width:'100%',height:'100%',padding: 20 }}>
+                    <Text style = { { fontFamily: 'SemiBold', fontSize:13,paddingBottom: 10, color: '#836cdd'} }>RESULTS</Text>
+                    {dataset.map((foodItem, index) => (
+                        <Pressable onPress = { () => console.log( foodItem.Name )} style = { styles.foodItemContainer }>
+                        
+                        <View key={index}>
+                            <Text style = {{ fontFamily: 'SemiBold', fontSize:15 }}>{foodItem.Name}</Text>
+                            <Text style = {{ fontFamily: 'Regular', fontSize:12 }}>{foodItem.Calories} kcal</Text>
+                            <Text style = {{ fontFamily: 'Regular', fontSize:12 }}>{foodItem.ServingSize}g</Text>
+                        </View>
 
-            {/* Food items added */}
+                        </Pressable>
+                    ))}
+                    </ScrollView>
+                </View>)
+            }
 
-            <View style = {{gap: 15}}>
-                <SelectedFoods />
-                <SelectedFoods />
-                <SelectedFoods />
-                <SelectedFoods />
-            </View>
-
-            <TouchableOpacity  style={[styles.button]} onPress={() => console.log('Button pressed')}>
-                <Text style={{ color: '#d9d4f6',fontFamily:'SemiBold',fontSize: 14 }}>Done</Text>
-            </TouchableOpacity >
-
-        </View>
-
-
-    </SafeAreaView>
-  )
+        </SafeAreaView>
+    )
 }
 
 const  styles = StyleSheet.create({
 
     innerDivContainer: {
+        paddingTop:0,
         padding: 20,
         width:'100%',
-        height:'31%',
+        height:'23%',
         backgroundColor:'#836cdd',
         borderBottomLeftRadius: 40,
         borderBottomRightRadius: 40,
@@ -91,10 +139,11 @@ const  styles = StyleSheet.create({
         borderRadius: 24,
         borderWidth: 0,
         backgroundColor: '#d9d4f6',
-        paddingLeft: 30,
+        paddingLeft: 15,
         paddingRight:15,
         color: '#57636c',
-        fontFamily:'Medium'
+        fontFamily:'SemiBold',
+        position: 'relative'
     },
     progressBarText: {
         fontFamily: 'SemiBold',
@@ -113,6 +162,15 @@ const  styles = StyleSheet.create({
         borderRadius: 8,
         alignItems: 'center',
         marginTop: 10,
+    },
+    foodItemContainer: {
+        backgroundColor: '#dcd6f3',
+        padding: 12,
+        borderRadius: 5,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom:15,
     }
 
 })
