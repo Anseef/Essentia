@@ -1,14 +1,24 @@
-import { Text, View } from 'react-native'
+import { Pressable, Text, View,Button } from 'react-native'
 import React, { Component } from 'react'
 
-export class Homepage extends Component {
-  render() {
+import { useNavigation } from '@react-navigation/native';
+
+const Homepage = () =>  {
+
+    const navigation = useNavigation();
     return (
       <View>
-        <Text>Homepage</Text>
+        <Pressable onPress={() => navigation.navigate('FoodDetails')}>
+          <Text>Food Details</Text>
+        </Pressable>
+        <Pressable onPress={() => navigation.navigate('FoodSelection')}>
+          <Text>Food Selection</Text>
+        </Pressable>
+        <Pressable onPress={() => navigation.navigate('FoodDescription')}>
+          <Text>Food Description</Text>
+        </Pressable>
       </View>
     )
-  }
 }
 
 export default Homepage

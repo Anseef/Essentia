@@ -1,10 +1,15 @@
-import { StyleSheet, View } from 'react-native';
 import { useFonts } from 'expo-font';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+
+import Homepage from './screens/Root/Homepage';
+import FoodDescription from './screens/Food/FoodDescription'
+import FoodSelection from './screens/Food/FoodSelection'
 import FoodDetails from './screens/Food/FoodDetails';
 
-export default function App() {
+const Stack = createNativeStackNavigator();
 
+export default function App() {
   const [ loaded ] = useFonts({
       Regular: require("./assets/Font/Poppins-Regular.ttf"),
       Bold: require("./assets/Font/Poppins-Bold.ttf"),
@@ -18,19 +23,28 @@ export default function App() {
   if(!loaded) return null;
 
   return (
-    <SafeAreaProvider>
-      <FoodDetails />
-    </SafeAreaProvider>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen name="Essentia" component={Homepage}
+            options={optionStyle}
+          />
+          <Stack.Screen name="FoodDetails" component={FoodDetails}         
+            options={optionStyle}
+          />
+          <Stack.Screen name="FoodSelection" component={FoodSelection}
+            options={optionStyle}
+          />
+          <Stack.Screen name="FoodDescription" component={FoodDescription} 
+            options={optionStyle}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
   );
 
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  
-});
+const optionStyle = {
+  headerStyle: { backgroundColor: '#836cdd', elevation: 0},
+  headerTitleStyle: { color: '#fff',fontFamily:'Bold',fontSize: 19,textAlign: 'left' },
+  headerTintColor: '#fff',
+}

@@ -4,9 +4,16 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="367edadf-4335-4b90-9492-8c1b17a9da9a" name="Changes" comment="">
+    <list default="true" id="2832923b-6f10-4980-a0f1-1c4ca2136ebc" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Frontend/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/app.json" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/app.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/screens/Food/FoodDescription.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/screens/Food/FoodDescription.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Frontend/screens/Food/FoodDetails.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/screens/Food/FoodDetails.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/screens/Food/FoodSelection.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/screens/Food/FoodSelection.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/screens/Root/Homepage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/screens/Root/Homepage.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -19,7 +26,7 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectId" id="2bnf6dgIX2pZMr7SA5C6sk8m9da" />
+  <component name="ProjectId" id="2c7SeXMw7AbUKlcifvS2iPeGge3" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -30,34 +37,21 @@
     "RunOnceActivity.cidr.known.project.marker": "true",
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
-    "com.google.services.firebase.aqiPopupShown": "true",
     "dart.analysis.tool.window.visible": "false",
     "git-widget-placeholder": "master",
-    "last_opened_file_path": "C:/Users/ansif/Documents/Essentia",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "settings.editor.selected.configurable": "AndroidSdkUpdater",
     "show.migrate.to.gradle.popup": "false"
   }
 }]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="367edadf-4335-4b90-9492-8c1b17a9da9a" name="Changes" comment="" />
-      <created>1706855590228</created>
+      <changelist id="2832923b-6f10-4980-a0f1-1c4ca2136ebc" name="Changes" comment="" />
+      <created>1707461230583</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1706855590228</updated>
+      <updated>1707461230583</updated>
     </task>
     <servers />
-  </component>
-  <component name="Vcs.Log.Tabs.Properties">
-    <option name="TAB_STATES">
-      <map>
-        <entry key="MAIN">
-          <value>
-            <State />
-          </value>
-        </entry>
-      </map>
-    </option>
   </component>
 </project>

@@ -1,38 +1,36 @@
 import axios from 'axios';
-import { View, Text, TextInput,StyleSheet,ScrollView, Pressable } from 'react-native'
+import { View, Text, TextInput,StyleSheet,ScrollView, Pressable,StatusBar } from 'react-native'
 import React from 'react'
-import CommonNavBar from '../../components/Navbar/CommonNavBar'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import CalorieCard from '../../components/CalorieCard'
 import { LinearGradient } from "expo-linear-gradient";
 import * as Progress from 'react-native-progress'
 import SelectedFoods from '../../components/FoodBlock/SelectedFoods'
 import { useState } from 'react'
+import { useNavigation } from '@react-navigation/native';
 
 const FoodDetails = () => {
 
     const [dataset, setDataSet] = useState([]);
     const [food, setFood] = useState('');
-    const [viewMore, setViewMore] = useState(false);
     const [selectedFoods, setSelectedFoods] = useState([]);
+
+    const navigation = useNavigation();
 
     // Fetch food data from backend
 
     const fetchData = async () => {
         try {
-          const response = await axios.post("http://192.168.43.208:8000/data", { food });
+          const response = await axios.post("http://192.168.159.188:8000/data", { food });
           setDataSet(response.data);
         } catch (e) {
           console.log(e);
         }
     }
-    // store foodDataset from backend
-    console.log(food)
-    
+
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#f1f4f8' }}>
-            <CommonNavBar value = { "Breakfast"}/>
-
+             <StatusBar backgroundColor={ '#836cdf' } />
                 <View style={{ flexDirection: 'row', backgroundColor: '#836cdd', padding:20,paddingTop: 0 }}>
                     <TextInput
                         placeholder="Search Food"
@@ -103,7 +101,7 @@ const FoodDetails = () => {
                     <ScrollView style={{ width:'100%',height:'100%',padding: 20 }}>
                     <Text style = { { fontFamily: 'SemiBold', fontSize:13,paddingBottom: 10, color: '#836cdd'} }>RESULTS</Text>
                     {dataset.map((foodItem, index) => (
-                        <Pressable onPress = { () => console.log( foodItem.Name )} style = { styles.foodItemContainer }>
+                        <Pressable onPress = { () => { navigation.navigate('FoodDescription',  { foodItem }) }} style = { styles.foodItemContainer }>
                         
                         <View key={index}>
                             <Text style = {{ fontFamily: 'SemiBold', fontSize:15 }}>{foodItem.Name}</Text>

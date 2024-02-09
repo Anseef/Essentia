@@ -1,6 +1,5 @@
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet,StatusBar } from 'react-native'
 import React from 'react'
-import Navbar from '../../components/Navbar/Navbar'
 import CalorieCard from '../../components/CalorieCard'
 import FoodBlock from '../../components/FoodBlock/FoodBlock'
 import { LinearGradient } from 'expo-linear-gradient'
@@ -9,17 +8,16 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 const FoodSelection = () => {
   return (
     <SafeAreaView style = {styles.container}>
-        
+        <StatusBar backgroundColor={ '#836cdf' } />
         <LinearGradient colors={["#836cdd", "#d0cae9" ]} style = { styles.innerDivContainer }>
-            <Navbar />
             <View style = { styles.innerDivContents }>
-                <View style={{ flexDirection: 'row',alignItems: 'baseline'}}>
+                <View style={{ flexDirection: 'row',alignItems: 'baseline',paddingTop: 5}}>
                     <Text style = {[styles.headerDivColor,styles.MiniBoldText]}>Eaten</Text>
                     <Text style = {[{ paddingLeft:5 },styles.headerDivColor,styles.MiniBoldText]}>776</Text>
                     <Text style = {[ { fontFamily: 'SemiBold', fontSize: 10},styles.headerDivColor]}>kcal</Text>
                 </View>
 
-                <View style = {{ flexDirection: 'row',alignItems: 'baseline'}}>
+                <View style = {{ flexDirection: 'row',alignItems: 'baseline',marginTop: -8}}>
                     <Text style = {[styles.highlightText, styles.headerDivColor ]} >2176</Text>
                     <Text style = {[ {fontFamily: 'SemiBold', fontSize: 14 } , styles.headerDivColor]}>kcal left</Text>
                 </View>
@@ -59,19 +57,19 @@ const styles = StyleSheet.create({
     },
     innerDivContainer: {
         width:'100%',
-        height:'35%',
+        height:'30%',
         backgroundColor:'#836cdd',
         borderBottomLeftRadius: 40,
         borderBottomRightRadius: 40,
     },
     highlightText: {
         fontFamily:'ExtraBold',
-        fontSize:60,
+        fontSize:58,
         
     },
     MiniBoldText: {
         fontFamily: 'Bold',
-        fontSize: 18
+        fontSize: 17
     },
     innerDivContents: {
         paddingLeft: 20,
