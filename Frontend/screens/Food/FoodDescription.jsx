@@ -1,5 +1,5 @@
 import { View, Text,StyleSheet,TextInput,StatusBar, Pressable,ScrollView } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import * as Progress from 'react-native-progress'
 import DividerLine from '../../components/DividerLine/DividerLine'
@@ -8,7 +8,39 @@ import { SelectList } from 'react-native-dropdown-select-list'
 
 
 const FoodDescription = ({ route }) => {
-    const fetchedFood  = route.params;
+
+    const [measure, setMeasure] = useState('1');
+    const [ quantity, setQuantity ] = useState(1)
+    // const fetchedFood = route.params;
+    const [foodItem, setFoodItem] = useState(route.params.foodItem);
+
+    const standardFoodServingSize = foodItem.ServingSize;
+    
+    const updateQuantity = () => {
+        const updatedFoodItem = { ...foodItem }; // Create a copy of the object
+        if(quantity != 0) {
+            if (measure === "1") {
+                // Multiply all values by the entered number of pieces
+                Object.keys(updatedFoodItem).map(key => {
+                    if (key !== "_id" && key !== "Name") {
+                        updatedFoodItem[key] *= quantity;
+                    }
+                });
+                setQuantity(1);
+            } else if (measure === "2") {
+                // Update all values based on the entered grams
+                const servingSizeMultiplier = quantity / foodItem.ServingSize;
+                Object.keys(updatedFoodItem).map(key => {
+                    if (key !== "_id" && key !== "Name") {
+                        updatedFoodItem[key] *= servingSizeMultiplier;
+                    }
+                });
+            }
+        }
+        setFoodItem(updatedFoodItem);
+    };
+
+
     return (
         <SafeAreaView style = {{ flex: 1, backgroundColor: '#f1f4f8' }}>
             <StatusBar backgroundColor={ '#836cdf' } />
@@ -17,29 +49,30 @@ const FoodDescription = ({ route }) => {
                 paddingRight: 20}}
             > 
 
-                <Text style  = {{ fontFamily: "SemiBold",fontSize:32,color: '#836cdd',marginBottom: -10,paddingTop:5}}>{fetchedFood.foodItem.Name}</Text>
+                <Text style  = {{ fontFamily: "SemiBold",fontSize:32,color: '#836cdd',marginBottom: -10,paddingTop:5}}>{foodItem.Name}</Text>
                 <Text style = {{ fontFamily: "Medium", fontSize: 13 ,color: '#acaeb3'}}>Appam is a type of thin pancake orginated from South India.</Text>
                 
                 {/* Quantity */}
 
                 <Text style = { styles.SubHeading }>Quantity</Text>
                     
-                <View style = {{flexDirection:'row',justifyContent:'space-between' ,borderRadius: 10 }}>
+                <View style = {{flexDirection:'row',justifyContent:'space-between' ,borderRadius: 10,alignItems:'flex-start' }}>
 
-                    <TextInput placeholder='1' keyboardType = 'numeric' maxLength={4} defaultValue={'1'} style = {{
+                    <TextInput defaultValue={ '1' } placeholder='0' keyboardType = 'numeric' maxLength={4} style = {{
                             width: 60, 
-                            height: '100%',
+                            height: 58,
                             backgroundColor:'#d9d4f6',
                             paddingLeft: 0,
                             borderRadius: 5,
                             fontFamily: 'SemiBold',
                             fontSize: 16,
-                            textAlign: 'center'
+                            textAlign: 'center',
                         }}
+                        onChangeText={ (quan) => { setQuantity(quan) }}
                     />
                     
                     <SelectList 
-                        setSelected={()=>console.log("Selected")} 
+                        setSelected={(value)=>{ setMeasure(value) }}
                         data={ [
                             {key:'1', value:'Pieces'},
                             {key:'2', value:'Gram'},
@@ -48,11 +81,16 @@ const FoodDescription = ({ route }) => {
                         search = { false }
                         fontFamily='SemiBold'
                         defaultOption = {{key:'1', value:'Pieces'}}
-                        boxStyles={{borderRadius:5, borderColor: 'transparent',width:300,alignItems:'center',justifyContent:'space-between',backgroundColor: '#d9d4f6'}}
+                        save='key'
+                        boxStyles={{borderRadius:5, borderColor: 'transparent',width:240,alignItems:'center',justifyContent:'space-between',backgroundColor: '#d9d4f6',minHeight:58}}
                         inputStyles = {{fontSize: 16}}
-                        dropdownStyles = {{ borderColor: 'transparent'}}
+                        dropdownStyles = {{ borderColor: 'transparent',backgroundColor:'#d9d4f6',borderRadius: 5}}
                         dropdownTextStyles = {{fontSize: 16}}
                     />
+
+                    <Pressable onPress = {()=> updateQuantity()}style={{backgroundColor: '#d9d4f6', borderRadius: 5,width:60,height:'100%',height:58}}>
+                        <Text style = {{fontFamily: 'SemiBold',fontSize: 16,flex: 1,alignSelf:'center'}}></Text>
+                    </Pressable>
 
                 </View>
 
@@ -110,20 +148,20 @@ const FoodDescription = ({ route }) => {
 
                     <View>
                         <DividerLine/>
-                            <NutritionBlock NutritionValue = { 'Calorie' } Measure = { fetchedFood.foodItem.Calories+' kcal' }/>
+                            <NutritionBlock NutritionValue = { 'Calorie' } Measure = { foodItem.Calories+' kcal' }/>
                         <DividerLine/>
-                            <NutritionBlock NutritionValue = { 'Carbs' } Measure = { fetchedFood.foodItem.Carbohydrates+' g' }/>
-                            <NutritionBlock NutritionValue = { 'Fiber' } Measure = { fetchedFood.foodItem.Fiber+' g' }/>
-                            <NutritionBlock NutritionValue = { 'Sugar' } Measure = { fetchedFood.foodItem.Sugar+' g' }/>
+                            <NutritionBlock NutritionValue = { 'Carbs' } Measure = { foodItem.Carbohydrates+' g' }/>
+                            <NutritionBlock NutritionValue = { 'Fiber' } Measure = { foodItem.Fiber+' g' }/>
+                            <NutritionBlock NutritionValue = { 'Sugar' } Measure = { foodItem.Sugar+' g' }/>
                         <DividerLine/>
-                            <NutritionBlock NutritionValue = { 'Protein' } Measure = { fetchedFood.foodItem.Protein+' g' }/>
+                            <NutritionBlock NutritionValue = { 'Protein' } Measure = { foodItem.Protein+' g' }/>
                         <DividerLine/>
-                            <NutritionBlock NutritionValue = { 'Fat' } Measure = { fetchedFood.foodItem.Fat+' g' }/>
-                            <NutritionBlock NutritionValue = { 'Saturated Fat' } Measure = { fetchedFood.foodItem.SaturatedFat+' g' }/>
+                            <NutritionBlock NutritionValue = { 'Fat' } Measure = { foodItem.Fat+' g' }/>
+                            <NutritionBlock NutritionValue = { 'Saturated Fat' } Measure = { foodItem.SaturatedFat+' g' }/>
                         <DividerLine/>
-                            <NutritionBlock NutritionValue = { 'Cholesterol' } Measure = { fetchedFood.foodItem.Cholesterol+' mg' }/>
-                            <NutritionBlock NutritionValue = { 'Sodium' } Measure = { fetchedFood.foodItem.Sodium+' mg' }/>
-                            <NutritionBlock NutritionValue = { 'Potassium' } Measure = { fetchedFood.foodItem.Potassium+' mg' }/>
+                            <NutritionBlock NutritionValue = { 'Cholesterol' } Measure = { foodItem.Cholesterol+' mg' }/>
+                            <NutritionBlock NutritionValue = { 'Sodium' } Measure = { foodItem.Sodium+' mg' }/>
+                            <NutritionBlock NutritionValue = { 'Potassium' } Measure = { foodItem.Potassium+' mg' }/>
                     </View>
 
                 </View>
