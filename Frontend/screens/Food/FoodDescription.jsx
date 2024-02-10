@@ -1,17 +1,18 @@
-import { View, Text,StyleSheet,TextInput,TouchableOpacity,StatusBar } from 'react-native'
+import { View, Text,StyleSheet,TextInput,StatusBar, Pressable,ScrollView } from 'react-native'
 import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import Picker from 'react-native-picker-select'
 import * as Progress from 'react-native-progress'
 import DividerLine from '../../components/DividerLine/DividerLine'
 import NutritionBlock from '../../components/FoodBlock/NutritionBlock'
+import { SelectList } from 'react-native-dropdown-select-list'
+
 
 const FoodDescription = ({ route }) => {
     const fetchedFood  = route.params;
     return (
         <SafeAreaView style = {{ flex: 1, backgroundColor: '#f1f4f8' }}>
             <StatusBar backgroundColor={ '#836cdf' } />
-            <View style = {{
+            <ScrollView style = {{
                 paddingLeft:20,
                 paddingRight: 20}}
             > 
@@ -23,27 +24,34 @@ const FoodDescription = ({ route }) => {
 
                 <Text style = { styles.SubHeading }>Quantity</Text>
                     
-                <View style = {{flexDirection:'row',justifyContent:'space-between',backgroundColor: '#d9d4f6',borderRadius: 10}}>
+                <View style = {{flexDirection:'row',justifyContent:'space-between' ,borderRadius: 10 }}>
 
-                    <TextInput placeholder="1"  keyboardType = 'numeric' maxLength={4} style = {{
-                            width: 60,
-                            height: 50,
+                    <TextInput placeholder='1' keyboardType = 'numeric' maxLength={4} defaultValue={'1'} style = {{
+                            width: 60, 
+                            height: '100%',
                             backgroundColor:'#d9d4f6',
-                            paddingLeft: 20,
+                            paddingLeft: 0,
                             borderRadius: 5,
                             fontFamily: 'SemiBold',
                             fontSize: 16,
+                            textAlign: 'center'
                         }}
                     />
                     
-                    <Picker
-                        placeholder="Piece"
-                        items={[
-                            { label: 'Value', value: 'Piece',key:1 },
-                            { label: 'Option 2', value: 'option2',key:2 },
-                            { label: 'Option 3', value: 'option3',key:3 },
-                        ]} 
-                        onValueChange={ () => console.log("Value changed")}
+                    <SelectList 
+                        setSelected={()=>console.log("Selected")} 
+                        data={ [
+                            {key:'1', value:'Pieces'},
+                            {key:'2', value:'Gram'},
+                            ]
+                        }
+                        search = { false }
+                        fontFamily='SemiBold'
+                        defaultOption = {{key:'1', value:'Pieces'}}
+                        boxStyles={{borderRadius:5, borderColor: 'transparent',width:300,alignItems:'center',justifyContent:'space-between',backgroundColor: '#d9d4f6'}}
+                        inputStyles = {{fontSize: 16}}
+                        dropdownStyles = {{ borderColor: 'transparent'}}
+                        dropdownTextStyles = {{fontSize: 16}}
                     />
 
                 </View>
@@ -52,7 +60,7 @@ const FoodDescription = ({ route }) => {
 
                 <Text style = { styles.SubHeading }>Nutrition Information</Text>
 
-                <View style = { styles.NutritionContainer }>
+                <View style = {[styles.NutritionContainer]}>
 
                     <View style = { styles.NutritionChartContainer }>
                         <View style = { styles.NutritionChartBlock }>
@@ -119,14 +127,13 @@ const FoodDescription = ({ route }) => {
                     </View>
 
                 </View>
-                
-                <TouchableOpacity  style={[styles.button]} onPress={() => console.log('Button pressed')}>
-                    <Text style={{ color: '#d9d4f6',fontFamily:'SemiBold',fontSize: 14 }}>Done</Text>
-                </TouchableOpacity >
 
-
+            </ScrollView>
+            <View style = {{ backgroundColor: '#f1f4f8', width:'100%',height: 10, paddingLeft: 20,paddingRight: 20}}>
+                <Pressable  style={[styles.button]} onPress={() => console.log('Button pressed')}>
+                    <Text style={{ color: '#d9d4f6',fontFamily:'SemiBold',fontSize: 16,alignSelf:'center' }}>Done</Text>
+                </Pressable >
             </View>
-
         </SafeAreaView>
     )
 }
@@ -139,10 +146,12 @@ const  styles = StyleSheet.create({
         paddingBottom:10
     },
     NutritionContainer: {
+        width:'100%',
         paddingTop: 10,
         paddingBottom:10,
         backgroundColor: '#fff',
-        borderRadius: 10
+        borderRadius: 10,
+        marginBottom:75
     },
     NutritionChartContainer: {
         padding:10,
@@ -159,12 +168,15 @@ const  styles = StyleSheet.create({
         fontSize: 13
     },
     button: {
-        zIndex: 1,
         backgroundColor: '#8b71db',
         padding: 12,
         borderRadius: 8,
-        alignItems: 'center',
+        alignSelf: 'center',
         marginTop: 10,
+        zIndex: 1,
+        bottom: 10,
+        position:'absolute',
+        width: '100%'
     }
 });
 
