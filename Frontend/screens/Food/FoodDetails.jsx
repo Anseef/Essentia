@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { View, Text, TextInput,StyleSheet,ScrollView, Pressable,StatusBar } from 'react-native'
 import React from 'react'
+import { useFocusEffect } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context'
 import CalorieCard from '../../components/CalorieCard'
 import { LinearGradient } from "expo-linear-gradient";
@@ -10,24 +11,47 @@ import { useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
 
 const FoodDetails = () => {
+    
+    const foodTime = 'Breakfast';
 
     const [dataset, setDataSet] = useState([]);
     const [food, setFood] = useState('');
-    const [selectedFoods, setSelectedFoods] = useState([]);
-
+    const [trackedFoods, setTrackedFoods] = useState([]);
+    const [totalCalorie, setTotalCalorie] = useState(0);
+    
     const navigation = useNavigation();
-
+    
     // Fetch food data from backend
-
+    
     const fetchData = async () => {
         try {
-          const response = await axios.post("http://192.168.159.188:8000/data", { food });
-          setDataSet(response.data);
+            const response = await axios.post("http://192.168.159.188:8000/data", { food });
+            setDataSet(response.data);
         } catch (e) {
-          console.log(e);
+            console.log(e);
         }
     }
+    
+    const fetchTrackedFoods = async () => {
+        try {
+            const response = await axios.post("http://192.168.159.188:8000/trackedFoods", { foodTime });
+            setTrackedFoods(response.data);
+        } catch (e) {
+            console.log(e);
+        }
+    };
 
+    //Fetch Tracked food based on the food time 
+    useFocusEffect(
+        React.useCallback(() => {
+            fetchTrackedFoods();
+        }, [])
+    );
+
+    const fetchTotalCalorie = (calorie) => {
+        setTotalCalorie(calorie);
+    }
+    
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#f1f4f8' }}>
              <StatusBar backgroundColor={ '#836cdf' } />
@@ -59,7 +83,7 @@ const FoodDetails = () => {
                         <View style = {{paddingBottom: 8}}>
                             <View style = {{ flexDirection: 'row',justifyContent:'space-between',paddingBottom: 10}}>
                                 <Text style = { styles.progressBarText } > Daily intake</Text>
-                                <Text  style = { styles.progressBarText } >1278/2974kcal</Text>
+                                <Text  style = { styles.progressBarText } >{ totalCalorie }/2974kcal</Text>
                             </View>
 
                             <Progress.Bar 
@@ -75,7 +99,7 @@ const FoodDetails = () => {
                         </View>
 
                         <View style={{ paddingTop: 10 }}>
-                            <CalorieCard/>
+                            <CalorieCard trackedFoodArray = { trackedFoods } sendTotalCalorie={ fetchTotalCalorie }/>
                         </View>
                             
                     </LinearGradient>
@@ -84,12 +108,15 @@ const FoodDetails = () => {
 
                         <Text style = { { fontFamily: 'SemiBold', fontSize:14,paddingBottom: 10} }>You have Tracked</Text>
 
-                        <View style = {{gap: 15}}>
-                            <SelectedFoods />
-                            <SelectedFoods />
-                            <SelectedFoods />
-                            <SelectedFoods />
-                        </View>
+                        <ScrollView style={{ height: 420 }} showsVerticalScrollIndicator={false}>
+                            {trackedFoods.length !== 0 ? (
+                                trackedFoods.map((foodItem, index) => (
+                                <SelectedFoods key={index} foodItemArray={foodItem} />
+                                ))
+                            ) : (
+                                <Text style = {{ fontFamily: 'Regular',fontSize: 16, alignSelf:'center', marginTop: 100}}>You haven't tracked any food yet</Text>
+                            )}
+                        </ScrollView>
 
                         <Pressable  style={[styles.button]} onPress={() => console.log('Button pressed')}>
                             <Text style={{ color: '#d9d4f6',fontFamily:'SemiBold',fontSize: 14 }}>Done</Text>
@@ -101,13 +128,13 @@ const FoodDetails = () => {
                     <ScrollView style={{ width:'100%',height:'100%',padding: 20 }}>
                     <Text style = { { fontFamily: 'SemiBold', fontSize:13,paddingBottom: 10, color: '#836cdd'} }>RESULTS</Text>
                     {dataset.map((foodItem, index) => (
-                        <Pressable onPress = { () => { navigation.navigate('FoodDescription',  { foodItem }) }} style = { styles.foodItemContainer }>
+                        <Pressable key={index} onPress = { () => { setFood('') ; navigation.navigate('FoodDescription',  { foodItem,foodTime }) }} style = { styles.foodItemContainer }>
                         
-                        <View key={index}>
-                            <Text style = {{ fontFamily: 'SemiBold', fontSize:15 }}>{foodItem.Name}</Text>
-                            <Text style = {{ fontFamily: 'Regular', fontSize:12 }}>{foodItem.Calories} kcal</Text>
-                            <Text style = {{ fontFamily: 'Regular', fontSize:12 }}>{foodItem.ServingSize}g</Text>
-                        </View>
+                            <View >
+                                <Text style = {{ fontFamily: 'SemiBold', fontSize:15 }}>{foodItem.Name}</Text>
+                                <Text style = {{ fontFamily: 'Regular', fontSize:12 }}>{foodItem.Calories} kcal</Text>
+                                <Text style = {{ fontFamily: 'Regular', fontSize:12 }}>{foodItem.ServingSize}g</Text>
+                            </View>
 
                         </Pressable>
                     ))}
@@ -156,7 +183,7 @@ const  styles = StyleSheet.create({
     button: {
         zIndex: 1,
         backgroundColor: '#8b71db',
-        padding: 11,
+        padding: 12,
         borderRadius: 8,
         alignItems: 'center',
         marginTop: 10,

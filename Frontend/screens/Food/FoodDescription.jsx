@@ -1,3 +1,4 @@
+import axios from 'axios'
 import { View, Text,StyleSheet,TextInput,StatusBar, Pressable,ScrollView } from 'react-native'
 import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -5,17 +6,23 @@ import * as Progress from 'react-native-progress'
 import DividerLine from '../../components/DividerLine/DividerLine'
 import NutritionBlock from '../../components/FoodBlock/NutritionBlock'
 import { SelectList } from 'react-native-dropdown-select-list'
+import { useNavigation } from '@react-navigation/native';
 
 
 const FoodDescription = ({ route }) => {
 
+    const navigation = useNavigation();
+
     const [measure, setMeasure] = useState('1');
     const [ quantity, setQuantity ] = useState(1)
-    // const fetchedFood = route.params;
+    const [storedQuantity, setStoredQuantity] = useState('1');
     const [foodItem, setFoodItem] = useState(route.params.foodItem);
-
-    const standardFoodServingSize = foodItem.ServingSize;
+    const foodTime = route.params.foodTime;
     
+    const carbProgress = (route.params.foodItem.Carbohydrates / 100); 
+    const proteinProgress = (route.params.foodItem.Protein / 100); 
+    const fatProgress = (route.params.foodItem.Fat / 100);
+
     const updateQuantity = () => {
         const updatedFoodItem = { ...foodItem }; // Create a copy of the object
         if(quantity != 0) {
@@ -24,6 +31,8 @@ const FoodDescription = ({ route }) => {
                 Object.keys(updatedFoodItem).map(key => {
                     if (key !== "_id" && key !== "Name") {
                         updatedFoodItem[key] *= quantity;
+                        updatedFoodItem[key] = parseFloat(updatedFoodItem[key].toFixed(2));
+                        setStoredQuantity(quantity);
                     }
                 });
                 setQuantity(1);
@@ -33,12 +42,33 @@ const FoodDescription = ({ route }) => {
                 Object.keys(updatedFoodItem).map(key => {
                     if (key !== "_id" && key !== "Name") {
                         updatedFoodItem[key] *= servingSizeMultiplier;
+                        updatedFoodItem[key] = parseFloat(updatedFoodItem[key].toFixed(2));
                     }
                 });
             }
         }
         setFoodItem(updatedFoodItem);
+        console.log(storedQuantity);
     };
+
+    const trackFoodItem = async () => {
+        const currentDate = new Date();
+        const formattedDate = currentDate.toLocaleDateString('en-CA');
+        const updatedFoodItem = { ...foodItem, date: formattedDate,MealTime: foodTime,Quantity: storedQuantity, Measure: measure === '1'? 'piece': 'gram'};
+
+        await axios.post("http:///192.168.159.188:8000/tracked", { foodItem: updatedFoodItem })
+        .then((response) => {
+            console.log(response.data);
+            
+            if(response.data){
+                navigation.navigate('FoodDetails');
+            }
+        })
+        .catch((e) => {
+            console.log(e);
+        });
+    };
+      
 
 
     return (
@@ -51,7 +81,6 @@ const FoodDescription = ({ route }) => {
 
                 <Text style  = {{ fontFamily: "SemiBold",fontSize:32,color: '#836cdd',marginBottom: -10,paddingTop:5}}>{foodItem.Name}</Text>
                 <Text style = {{ fontFamily: "Medium", fontSize: 13 ,color: '#acaeb3'}}>Appam is a type of thin pancake orginated from South India.</Text>
-                
                 {/* Quantity */}
 
                 <Text style = { styles.SubHeading }>Quantity</Text>
@@ -74,13 +103,13 @@ const FoodDescription = ({ route }) => {
                     <SelectList 
                         setSelected={(value)=>{ setMeasure(value) }}
                         data={ [
-                            {key:'1', value:'Pieces'},
+                            {key:'1', value:'Piece('+route.params.foodItem.ServingSize+'g)'},
                             {key:'2', value:'Gram'},
                             ]
                         }
                         search = { false }
                         fontFamily='SemiBold'
-                        defaultOption = {{key:'1', value:'Pieces'}}
+                        defaultOption = {{key:'1', value:'Piece('+route.params.foodItem.ServingSize+'g)'}}
                         save='key'
                         boxStyles={{borderRadius:5, borderColor: 'transparent',width:240,alignItems:'center',justifyContent:'space-between',backgroundColor: '#d9d4f6',minHeight:58}}
                         inputStyles = {{fontSize: 16}}
@@ -99,11 +128,10 @@ const FoodDescription = ({ route }) => {
                 <Text style = { styles.SubHeading }>Nutrition Information</Text>
 
                 <View style = {[styles.NutritionContainer]}>
-
                     <View style = { styles.NutritionChartContainer }>
                         <View style = { styles.NutritionChartBlock }>
                             <Progress.Circle 
-                                progress={0.8}
+                                progress={carbProgress}
                                 size={75}
                                 thickness = { 8 }
                                 color = { '#f9cf58'}
@@ -111,14 +139,15 @@ const FoodDescription = ({ route }) => {
                                 showsText = { true }
                                 borderRadius = { 10 }
                                 borderWidth = { 0 }
-                                animated = { true } 
+                                animated = { true }
+
                             />
                             <Text style = { styles.progressBarText }>Carbs</Text>
                         </View>
                         
                         <View style = { styles.NutritionChartBlock }>
                             <Progress.Circle 
-                                progress={0.36}
+                                progress={proteinProgress}
                                 size={75}
                                 thickness = { 8 }
                                 showsText = { true }
@@ -132,7 +161,7 @@ const FoodDescription = ({ route }) => {
                         </View>
                         <View style = { styles.NutritionChartBlock }>
                             <Progress.Circle 
-                                progress={0.9}
+                                progress={fatProgress}
                                 size={75}
                                 thickness = { 8 }
                                 showsText = { true }
@@ -168,8 +197,8 @@ const FoodDescription = ({ route }) => {
 
             </ScrollView>
             <View style = {{ backgroundColor: '#f1f4f8', width:'100%',height: 10, paddingLeft: 20,paddingRight: 20}}>
-                <Pressable  style={[styles.button]} onPress={() => console.log('Button pressed')}>
-                    <Text style={{ color: '#d9d4f6',fontFamily:'SemiBold',fontSize: 16,alignSelf:'center' }}>Done</Text>
+                <Pressable  style={[styles.button]} onPress={() => trackFoodItem()}>
+                    <Text style={{ color: '#d9d4f6',fontFamily:'SemiBold',fontSize: 16,alignSelf:'center' }}>Track</Text>
                 </Pressable >
             </View>
         </SafeAreaView>

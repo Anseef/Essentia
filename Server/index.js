@@ -6,6 +6,7 @@ const app = express();
 app.use(cors());
 app.use(express.json()); 
 
+// Fetch food data from DB
 
 app.post('/data', async (request, response) => {
     const foodData = request.body
@@ -20,22 +21,13 @@ app.post('/data', async (request, response) => {
     }
 });
 
-app.post('/selected', async (request, response) => {
+
+// Selected food to DB
+
+app.post('/tracked', async (request, response) => {
     const selectedFood = request.body;
     try {
         const insertQuery = await storedFoodCollection.insertOne(selectedFood);
-        const allData = await storedFoodCollection.find({
-            $and: [
-                { "selectedFoods.Date": '2024-02-05' },
-                { "selectedFoods.MealTime": 'Dinner' }
-            ]
-        }).toArray();
-        
-
-        allData.map(async (foodItem) => {
-            console.log(foodItem);
-        });
-
         if (insertQuery) {
             response.json("Insertion Successful");
         }
@@ -44,6 +36,26 @@ app.post('/selected', async (request, response) => {
         response.status(500).json({ error: 'Internal Server Error' });
     }
 });
+
+// fetch Tracked food from DB 
+
+app.post('/trackedFoods',async (request, response) => {
+    const foodTimeArray = request.body;
+    try {
+        const fetchSelected = await storedFoodCollection.find( {
+            $and: [
+                { "foodItem.date": '2024-02-11' },
+                { "foodItem.MealTime": foodTimeArray.foodTime }
+            ]
+        }).toArray()
+        if (fetchSelected) {
+            response.json(fetchSelected);
+        }
+    } catch (e) {
+        console.log(e);
+        response.status(500).json({ error: 'Internal Server Error' });
+    }
+})
 
 
 app.listen(8000, () => {
