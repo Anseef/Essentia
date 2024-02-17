@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { View, Text, TextInput,StyleSheet,ScrollView, Pressable,StatusBar } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useFocusEffect } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context'
 import CalorieCard from '../../components/CalorieCard'
@@ -10,22 +10,24 @@ import SelectedFoods from '../../components/FoodBlock/SelectedFoods'
 import { useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
 
-const FoodDetails = () => {
+const FoodDetails = ({ route }) => {
     
-    const foodTime = 'Breakfast';
+    const foodTime = route.params?.FoodTime;
+    const todayDate = route.params?.currentDate;
 
     const [dataset, setDataSet] = useState([]);
     const [food, setFood] = useState('');
     const [trackedFoods, setTrackedFoods] = useState([]);
+    const [filteredTrackedFoods, setFilteredTrackedFoods] = useState([]);
     const [totalCalorie, setTotalCalorie] = useState(0);
     
     const navigation = useNavigation();
     
-    // Fetch food data from backend
+    //Fetch food data from backend
     
     const fetchData = async () => {
         try {
-            const response = await axios.post("http://192.168.159.188:8000/data", { food });
+            const response = await axios.post("http://192.168.186.188:8000/data", { food });
             setDataSet(response.data);
         } catch (e) {
             console.log(e);
@@ -34,7 +36,7 @@ const FoodDetails = () => {
     
     const fetchTrackedFoods = async () => {
         try {
-            const response = await axios.post("http://192.168.159.188:8000/trackedFoods", { foodTime });
+            const response = await axios.post("http://192.168.186.188:8000/trackedFoods");
             setTrackedFoods(response.data);
         } catch (e) {
             console.log(e);
@@ -51,6 +53,18 @@ const FoodDetails = () => {
     const fetchTotalCalorie = (calorie) => {
         setTotalCalorie(calorie);
     }
+
+    // Filtering Tracked Foods based on the meal time and date
+
+    useEffect(() => {
+        const filteredFoods = trackedFoods.filter((foodItemList) => {
+            return (
+                foodItemList.foodItem.date === todayDate &&
+                foodItemList.foodItem.MealTime === foodTime
+            );
+        });
+        setFilteredTrackedFoods(filteredFoods);
+    }, [trackedFoods, foodTime]);
     
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#f1f4f8' }}>
@@ -99,7 +113,7 @@ const FoodDetails = () => {
                         </View>
 
                         <View style={{ paddingTop: 10 }}>
-                            <CalorieCard trackedFoodArray = { trackedFoods } sendTotalCalorie={ fetchTotalCalorie }/>
+                            <CalorieCard trackedFoodArray = { filteredTrackedFoods } sendTotalCalorie={ fetchTotalCalorie }/>
                         </View>
                             
                     </LinearGradient>
@@ -109,8 +123,8 @@ const FoodDetails = () => {
                         <Text style = { { fontFamily: 'SemiBold', fontSize:14,paddingBottom: 10} }>You have Tracked</Text>
 
                         <ScrollView style={{ height: 420 }} showsVerticalScrollIndicator={false}>
-                            {trackedFoods.length !== 0 ? (
-                                trackedFoods.map((foodItem, index) => (
+                            {filteredTrackedFoods.length !== 0 ? (
+                                filteredTrackedFoods.map((foodItem, index) => (
                                 <SelectedFoods key={index} foodItemArray={foodItem} />
                                 ))
                             ) : (
@@ -118,8 +132,8 @@ const FoodDetails = () => {
                             )}
                         </ScrollView>
 
-                        <Pressable  style={[styles.button]} onPress={() => console.log('Button pressed')}>
-                            <Text style={{ color: '#d9d4f6',fontFamily:'SemiBold',fontSize: 14 }}>Done</Text>
+                        <Pressable  style={[styles.button]} onPress={ () => { navigation.navigate('FoodSelection') }}>
+                            <Text style={{ color: '#d9d4f6',fontFamily:'SemiBold',fontSize: 14 }} >Done</Text>
                         </Pressable >
                     </View>
                 </View>
@@ -128,7 +142,7 @@ const FoodDetails = () => {
                     <ScrollView style={{ width:'100%',height:'100%',padding: 20 }}>
                     <Text style = { { fontFamily: 'SemiBold', fontSize:13,paddingBottom: 10, color: '#836cdd'} }>RESULTS</Text>
                     {dataset.map((foodItem, index) => (
-                        <Pressable key={index} onPress = { () => { setFood('') ; navigation.navigate('FoodDescription',  { foodItem,foodTime }) }} style = { styles.foodItemContainer }>
+                        <Pressable key={index} onPress = { () => { setFood('') ; navigation.navigate('FoodDescription',  { foodItem,foodTime,todayDate }) }} style = { styles.foodItemContainer }>
                         
                             <View >
                                 <Text style = {{ fontFamily: 'SemiBold', fontSize:15 }}>{foodItem.Name}</Text>

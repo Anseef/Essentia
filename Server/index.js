@@ -40,14 +40,9 @@ app.post('/tracked', async (request, response) => {
 // fetch Tracked food from DB 
 
 app.post('/trackedFoods',async (request, response) => {
-    const foodTimeArray = request.body;
+    //const foodTimeArray = request.body;
     try {
-        const fetchSelected = await storedFoodCollection.find( {
-            $and: [
-                { "foodItem.date": '2024-02-11' },
-                { "foodItem.MealTime": foodTimeArray.foodTime }
-            ]
-        }).toArray()
+        const fetchSelected = await storedFoodCollection.find().toArray()
         if (fetchSelected) {
             response.json(fetchSelected);
         }

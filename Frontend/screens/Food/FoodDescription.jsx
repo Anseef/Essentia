@@ -17,7 +17,8 @@ const FoodDescription = ({ route }) => {
     const [ quantity, setQuantity ] = useState(1)
     const [storedQuantity, setStoredQuantity] = useState('1');
     const [foodItem, setFoodItem] = useState(route.params.foodItem);
-    const foodTime = route.params.foodTime;
+    const FoodTime = route.params.foodTime;
+    const currentDate = route.params.todayDate;
     
     const carbProgress = (route.params.foodItem.Carbohydrates / 100); 
     const proteinProgress = (route.params.foodItem.Protein / 100); 
@@ -48,20 +49,19 @@ const FoodDescription = ({ route }) => {
             }
         }
         setFoodItem(updatedFoodItem);
-        console.log(storedQuantity);
     };
 
     const trackFoodItem = async () => {
-        const currentDate = new Date();
-        const formattedDate = currentDate.toLocaleDateString('en-CA');
-        const updatedFoodItem = { ...foodItem, date: formattedDate,MealTime: foodTime,Quantity: storedQuantity, Measure: measure === '1'? 'piece': 'gram'};
+        // const currentDate = new Date();
+        // const formattedDate = currentDate.toLocaleDateString('en-CA');
+        const updatedFoodItem = { ...foodItem, date: currentDate,MealTime: FoodTime,Quantity: storedQuantity, Measure: measure === '1'? 'piece': 'gram'};
 
-        await axios.post("http:///192.168.159.188:8000/tracked", { foodItem: updatedFoodItem })
+        await axios.post("http://192.168.186.188:8000/tracked", { foodItem: updatedFoodItem })
         .then((response) => {
             console.log(response.data);
             
             if(response.data){
-                navigation.navigate('FoodDetails');
+                navigation.navigate('FoodDetails',{ FoodTime, currentDate });
             }
         })
         .catch((e) => {

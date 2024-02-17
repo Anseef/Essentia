@@ -20,12 +20,13 @@ const CalorieCard = ({ trackedFoodArray, sendTotalCalorie }) => {
                 calorie += foodItemArray.foodItem.Calories;
             });
     
-            setTotalFat(fat);
-            setTotalCarbohydrates(carbohydrates);
-            setTotalProtein(protein);
-            setTotalCalorie(calorie);
+           
+            setTotalFat(Math.round(fat));
+            setTotalCarbohydrates(Math.round(carbohydrates));
+            setTotalProtein(Math.round(protein));
+            setTotalCalorie(Math.round(calorie));
 
-            sendTotalCalorie(calorie);
+            sendTotalCalorie(Math.round(calorie));
         }
 
     };
