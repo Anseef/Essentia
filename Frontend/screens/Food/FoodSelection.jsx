@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { View, Text, StyleSheet,StatusBar, ScrollView } from 'react-native'
+import { View, Text, StyleSheet,StatusBar, ScrollView,Pressable } from 'react-native'
 import React, { useEffect } from 'react'
 import { useState } from 'react'
 import { useFocusEffect } from '@react-navigation/native';
@@ -13,7 +13,7 @@ const FoodSelection = () => {
     const [totalCalorie,setTotalCalorie] = useState(0);
     const [trackedItems, setTrackedItems] = useState([])
     const [filteredTrackedFoods, setFilteredTrackedFoods] = useState([]);
-    const [todayDate,setTodayDate] = useState('')
+    const [todayDate,setTodayDate] = useState(new Date())
     
     //fetch tracked foods from DB
     const fetchTrackedFoods = async () => {
@@ -57,6 +57,29 @@ const FoodSelection = () => {
     },[])
 
 
+    //Session for handle the date backward and forward
+
+    const handleBackPress = () => {
+        const [year, month, day] = todayDate.split('-').map(Number);
+        const previousDate = new Date(year, month - 1, day - 1);
+        setTodayDate(formatDate(previousDate));
+    };
+      
+    const handleForwardPress = () => {
+        const [year, month, day] = todayDate.split('-').map(Number);
+        const nextDate = new Date(year, month - 1, day + 1);
+        setTodayDate(formatDate(nextDate));
+    };
+      
+    const formatDate = (date) => {
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const day = date.getDate().toString().padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
+    
+
+
     return (
         <SafeAreaView style = {styles.container}>
             <StatusBar backgroundColor={ '#836cdf' } />
@@ -82,7 +105,10 @@ const FoodSelection = () => {
 
             <View>
                 <View style={ {flexDirection: 'row',justifyContent:'space-between',padding:20} }>
-                    <Text style = {styles.dateBar}> {"<"} </Text>
+
+                    <Pressable onPress={ () => handleBackPress() }>
+                        <Text style = {styles.dateBar}> {"<"} </Text>
+                    </Pressable>
 
                     <Text style={styles.dateBar}>
                         TODAY, 
@@ -91,7 +117,10 @@ const FoodSelection = () => {
                         </Text>
                     </Text>
 
-                    <Text style = {styles.dateBar}> {">"} </Text>
+                    <Pressable onPress={ () => handleForwardPress() }>
+                        <Text style = {styles.dateBar}> {">"} </Text>
+                    </Pressable>
+
                 </View>
 
                 <ScrollView style={styles.foodSessionContainer} showsVerticalScrollIndicator={false}>

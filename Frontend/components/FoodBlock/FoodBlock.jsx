@@ -8,7 +8,7 @@ const FoodBlock = ({ FoodTime, trackedItems, currentDate }) => {
   const navigation = useNavigation();
 
   return (
-    <Pressable style={styles.foodBlock} onPress={() => navigation.navigate('FoodDetails', { FoodTime })}>
+    <Pressable style={styles.foodBlock} onPress={() => navigation.navigate('FoodDetails', { FoodTime, currentDate })}>
       <View style={{ flexDirection: 'row' }}>
         <Text style={{ paddingRight: 5 }}>.</Text>
         <Text style={{ fontFamily: 'SemiBold',fontSize:16 }}>{ FoodTime }</Text>
