@@ -160,7 +160,7 @@ const FoodDetails = ({ route }) => {
     )
 }
 
-const  styles = StyleSheet.create({
+const styles = StyleSheet.create({
 
     innerDivContainer: {
         paddingTop:0,

@@ -2,11 +2,11 @@ import axios from 'axios'
 import { View, Text,StyleSheet,TextInput,StatusBar, Pressable,ScrollView } from 'react-native'
 import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import * as Progress from 'react-native-progress'
 import DividerLine from '../../components/DividerLine/DividerLine'
 import NutritionBlock from '../../components/FoodBlock/NutritionBlock'
 import { SelectList } from 'react-native-dropdown-select-list'
 import { useNavigation } from '@react-navigation/native';
+import AnimatedProgressWheel from 'react-native-progress-wheel';
 
 
 const FoodDescription = ({ route }) => {
@@ -20,9 +20,9 @@ const FoodDescription = ({ route }) => {
     const FoodTime = route.params.foodTime;
     const currentDate = route.params.todayDate;
     
-    const carbProgress = (route.params.foodItem.Carbohydrates / 100); 
-    const proteinProgress = (route.params.foodItem.Protein / 100); 
-    const fatProgress = (route.params.foodItem.Fat / 100);
+    const carbProgress = (route.params.foodItem.Carbohydrates); 
+    const proteinProgress = (route.params.foodItem.Protein); 
+    const fatProgress = (route.params.foodItem.Fat);
 
     const updateQuantity = () => {
         const updatedFoodItem = { ...foodItem }; // Create a copy of the object
@@ -130,46 +130,51 @@ const FoodDescription = ({ route }) => {
                 <View style = {[styles.NutritionContainer]}>
                     <View style = { styles.NutritionChartContainer }>
                         <View style = { styles.NutritionChartBlock }>
-                            <Progress.Circle 
-                                progress={carbProgress}
+                            <AnimatedProgressWheel 
                                 size={75}
-                                thickness = { 8 }
-                                color = { '#f9cf58'}
-                                unfilledColor={ '#f1f4f8'}
-                                showsText = { true }
-                                borderRadius = { 10 }
-                                borderWidth = { 0 }
-                                animated = { true }
-
+                                width={8} 
+                                max={100}
+                                rounded={true}
+                                color={'#f9cf58'}
+                                progress={carbProgress}
+                                showProgressLabel={true}
+                                backgroundColor={'#f1f4f8'}
+                                rotation={'-90deg'}
+                                showPercentageSymbol={true}
+                                labelStyle={styles.progressLabel}
                             />
                             <Text style = { styles.progressBarText }>Carbs</Text>
                         </View>
                         
                         <View style = { styles.NutritionChartBlock }>
-                            <Progress.Circle 
-                                progress={proteinProgress}
+                            <AnimatedProgressWheel 
                                 size={75}
-                                thickness = { 8 }
-                                showsText = { true }
-                                color = { '#31eabf'}
-                                unfilledColor={ '#f1f4f8'}
-                                borderRadius = { 10 }
-                                borderWidth = { 0 }
-                                animated = { true } 
+                                width={8} 
+                                max={100}
+                                rounded={true}
+                                color={'#31eabf'}
+                                progress={proteinProgress}
+                                showProgressLabel={true}
+                                backgroundColor={'#f1f4f8'}
+                                rotation={'-90deg'}
+                                showPercentageSymbol={true}
+                                labelStyle={styles.progressLabel}
                             />
                             <Text style = { styles.progressBarText }>Protein</Text>
                         </View>
                         <View style = { styles.NutritionChartBlock }>
-                            <Progress.Circle 
-                                progress={fatProgress}
+                            <AnimatedProgressWheel 
                                 size={75}
-                                thickness = { 8 }
-                                showsText = { true }
-                                color = { '#ff5963'}
-                                unfilledColor={ '#f1f4f8'}
-                                borderRadius = { 10 }
-                                borderWidth = { 0 }
-                                animated = { true } 
+                                width={8} 
+                                max={100}
+                                rounded={true}
+                                color={'#ff5963'}
+                                progress={fatProgress}
+                                showProgressLabel={true}
+                                backgroundColor={'#f1f4f8'}
+                                rotation={'-90deg'}
+                                showPercentageSymbol={true}
+                                labelStyle={styles.progressLabel}
                             />
                             <Text style = { styles.progressBarText }>Fat</Text>
                         </View>
@@ -230,9 +235,10 @@ const  styles = StyleSheet.create({
         alignItems: 'center',
         gap: 7
     },
-    progressBarText: {
-        fontFamily: 'SemiBold',
-        fontSize: 13
+    progressLabel: {
+        marginTop: 3,
+        fontFamily: 'Medium',
+        fontSize: 17
     },
     button: {
         backgroundColor: '#8b71db',
