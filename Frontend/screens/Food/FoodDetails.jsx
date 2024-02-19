@@ -9,6 +9,7 @@ import * as Progress from 'react-native-progress'
 import SelectedFoods from '../../components/FoodBlock/SelectedFoods'
 import { useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
+import IonIcons from 'react-native-vector-icons/Ionicons'
 
 const FoodDetails = ({ route }) => {
     
@@ -82,12 +83,12 @@ const FoodDetails = ({ route }) => {
                     {food !== '' &&
                         <Pressable
                             autoFocus={false}
-                            style={{ alignSelf:'center', right: 30 }}
+                            style={{ alignSelf:'center', right: 35 }}
                             onPress={() => {
                                 setFood('');
                             }}
                         >
-                            <Text style={{ color: '#57636c',fontFamily: 'SemiBold' }}>X</Text>
+                            <IonIcons name='close' size={ 20 }/>
                         </Pressable>
                     }
                 </View>

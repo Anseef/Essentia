@@ -7,6 +7,7 @@ import CalorieCard from '../../components/CalorieCard'
 import FoodBlock from '../../components/FoodBlock/FoodBlock'
 import { LinearGradient } from 'expo-linear-gradient'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import IoniIcons from 'react-native-vector-icons/Ionicons'
 
 const FoodSelection = () => {
     
@@ -88,7 +89,7 @@ const FoodSelection = () => {
                     <View style={{ flexDirection: 'row',alignItems: 'baseline',paddingTop: 5}}>
                         <Text style = {[styles.headerDivColor,styles.MiniBoldText]}>Eaten</Text>
                         <Text style = {[{ paddingLeft:5 },styles.headerDivColor,styles.MiniBoldText]}>{ totalCalorie }</Text>
-                        <Text style = {[ { fontFamily: 'SemiBold', fontSize: 10},styles.headerDivColor]}>kcal</Text>
+                        <Text style = {[{ fontFamily: 'SemiBold', fontSize: 10},styles.headerDivColor]}>kcal</Text>
                     </View>
 
                     <View style = {{ flexDirection: 'row',alignItems: 'baseline',marginTop: -8}}>
@@ -107,7 +108,9 @@ const FoodSelection = () => {
                 <View style={ {flexDirection: 'row',justifyContent:'space-between',padding:20} }>
 
                     <Pressable onPress={ () => handleBackPress() }>
-                        <Text style = {styles.dateBar}> {"<"} </Text>
+                        <Text style = {styles.dateBar}>
+                            <IoniIcons name='chevron-back' size={ 20 }/>
+                        </Text>
                     </Pressable>
 
                     <Text style={styles.dateBar}>
@@ -118,16 +121,18 @@ const FoodSelection = () => {
                     </Text>
 
                     <Pressable onPress={ () => handleForwardPress() }>
-                        <Text style = {styles.dateBar}> {">"} </Text>
+                        <Text style = {styles.dateBar}>
+                        <IoniIcons name='chevron-forward' size={ 20 }/>
+                        </Text>
                     </Pressable>
 
                 </View>
 
                 <ScrollView style={styles.foodSessionContainer} showsVerticalScrollIndicator={false}>
-                    <FoodBlock FoodTime={'Breakfast'} trackedItems={filterTrackedItems('Breakfast')} currentDate = { todayDate } />
-                    <FoodBlock FoodTime={'Lunch'} trackedItems={filterTrackedItems('Lunch')} currentDate = { todayDate }/>
-                    <FoodBlock FoodTime={'Dinner'} trackedItems={filterTrackedItems('Dinner')} currentDate = { todayDate }/>
-                    <FoodBlock FoodTime={'Snacks'} trackedItems={filterTrackedItems('Snacks')} currentDate = { todayDate }/>
+                    <FoodBlock Icon={'free-breakfast'} FoodTime={'Breakfast'} trackedItems={filterTrackedItems('Breakfast')} currentDate = { todayDate } />
+                    <FoodBlock Icon={'lunch-dining'} FoodTime={'Lunch'} trackedItems={filterTrackedItems('Lunch')} currentDate = { todayDate }/>
+                    <FoodBlock Icon={'dinner-dining'} FoodTime={'Dinner'} trackedItems={filterTrackedItems('Dinner')} currentDate = { todayDate }/>
+                    <FoodBlock Icon={'fastfood'} FoodTime={'Snacks'} trackedItems={filterTrackedItems('Snacks')} currentDate = { todayDate }/>
                 </ScrollView>
 
             </View>

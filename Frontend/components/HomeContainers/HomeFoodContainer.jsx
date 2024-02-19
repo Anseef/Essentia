@@ -2,6 +2,7 @@ import { View, Text, Pressable, StyleSheet } from 'react-native'
 import React from 'react'
 import AnimatedProgressWheel from 'react-native-progress-wheel';
 import { useNavigation } from '@react-navigation/native';
+import IconPack from 'react-native-vector-icons/FontAwesome5';
 
 const HomeFoodContainer = () => {
 
@@ -11,7 +12,7 @@ const HomeFoodContainer = () => {
     <Pressable style = { styles.container}  onPress={() => navigation.navigate('FoodSelection')}>
       <View style = { styles.headingBlock }>
         <Text style = {{ fontFamily: 'SemiBold', fontSize: 20 }}>Food</Text>
-        <Text style = {{ fontFamily: 'SemiBold', fontSize: 20 }}> . </Text> 
+        <IconPack name = 'coffee' size={ 20 } color={ '#7d5ada'}/>
       </View>
       <View style = {{ alignSelf: 'center',paddingTop: 6}}>
         <AnimatedProgressWheel 
@@ -43,6 +44,7 @@ const styles = StyleSheet.create({
   headingBlock: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center'
   },
   subtitle: {
     marginTop: -10,

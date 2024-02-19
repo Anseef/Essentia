@@ -1,16 +1,20 @@
 import { Text, View, StyleSheet, Pressable } from 'react-native';
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import MaterialCommunnityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const FoodBlock = ({ FoodTime, trackedItems, currentDate }) => {
+const FoodBlock = ({ Icon, FoodTime, trackedItems, currentDate }) => {
   const totalCaloriePerTime = trackedItems.reduce((total, item) => total + item.foodItem.Calories, 0);
 
   const navigation = useNavigation();
 
   return (
     <Pressable style={styles.foodBlock} onPress={() => navigation.navigate('FoodDetails', { FoodTime, currentDate })}>
-      <View style={{ flexDirection: 'row' }}>
-        <Text style={{ paddingRight: 5 }}>.</Text>
+      <View style={{ flexDirection: 'row', alignItems:'center' }}>
+        <Text style={{ paddingRight: 5 }}>
+          <MaterialIcons name = { Icon } size={ 19 } color={ '#7d5ada' }/>
+        </Text>
         <Text style={{ fontFamily: 'SemiBold',fontSize:16 }}>{ FoodTime }</Text>
       </View>
 

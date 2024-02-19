@@ -1,17 +1,15 @@
 import { CheckBox,View, Text, Pressable, StyleSheet } from 'react-native'
 import React from 'react'
-import { useNavigation } from '@react-navigation/native';
 import BouncyCheckbox from "react-native-bouncy-checkbox";
+import IconPack from 'react-native-vector-icons/FontAwesome5';
 
 const HomeHabitContainer = () => {
-
-  const navigation = useNavigation();
 
   return (
     <Pressable style = { styles.container}  onPress={() => console.log("Habit Clicked")}>
       <View style = { styles.headingBlock }>
         <Text style = {{ fontFamily: 'SemiBold', fontSize: 20 }}>Habits</Text>
-        <Text style = {{ fontFamily: 'SemiBold', fontSize: 20 }}> . </Text> 
+        <IconPack name='guitar' size={ 20 } style = {{ paddingBottom: 5 }} color={ '#7d5ada'}/> 
       </View>
       <View style = {{ alignSelf: 'center' }}>
 
@@ -56,6 +54,8 @@ const styles = StyleSheet.create({
   headingBlock: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingTop: 1
   },
   habitBlock: {
     width: '100%',
