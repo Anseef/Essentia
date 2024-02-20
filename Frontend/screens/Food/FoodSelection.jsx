@@ -19,7 +19,7 @@ const FoodSelection = () => {
     //fetch tracked foods from DB
     const fetchTrackedFoods = async () => {
         try {
-            const response = await axios.post("http://192.168.186.188:8000/trackedFoods");
+            const response = await axios.post("http://192.168.81.188:8000/trackedFoods");
             setTrackedItems(response.data);
             
         } catch (e) {
@@ -79,8 +79,6 @@ const FoodSelection = () => {
         return `${year}-${month}-${day}`;
     };
     
-
-
     return (
         <SafeAreaView style = {styles.container}>
             <StatusBar backgroundColor={ '#836cdf' } />

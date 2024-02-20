@@ -1,11 +1,22 @@
-import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
+import { Text, View, StyleSheet, Pressable } from 'react-native';
 import React from 'react';
+import { useNavigation } from '@react-navigation/native';
 
-const SelectedFoods = ({ foodItemArray }) =>{
+const SelectedFoods = ({ foodItemArray, onRemove }) =>{
+
+  const navigation = useNavigation();
 
   return (
-    <View style={styles.foodBlock}>
-      
+
+    <Pressable style={styles.foodBlock} 
+      onPress = { () => 
+        { navigation.navigate
+            ('FoodDescription',
+              { foodItem: foodItemArray.foodItem,foodTime: foodItemArray.foodItem.MealTime, todayDate: foodItemArray.foodItem.date }
+            ) 
+        }
+      }
+    >
 
       <View>
         
@@ -18,11 +29,11 @@ const SelectedFoods = ({ foodItemArray }) =>{
 
       </View>
 
-      <TouchableOpacity style={styles.button} onPress={() => console.log('Button pressed')}>
+      <Pressable style={styles.button} onPress={() => onRemove(foodItemArray.foodItem) }>
         <Text style={{ color: '#fff',fontFamily:'SemiBold',fontSize:13 }}>Remove</Text>
-      </TouchableOpacity>
+      </Pressable>
 
-    </View>
+    </Pressable>
   );
 }
 

@@ -4,9 +4,13 @@ import AnimatedProgressWheel from 'react-native-progress-wheel';
 import { useNavigation } from '@react-navigation/native';
 import IconPack from 'react-native-vector-icons/FontAwesome5';
 
+
+import { useTrackedFoods } from '../GlobalDataComponents/TotalCalorieProvider';
+
 const HomeFoodContainer = () => {
 
   const navigation = useNavigation();
+  const { totalCalorie } = useTrackedFoods();
 
   return (
     <Pressable style = { styles.container}  onPress={() => navigation.navigate('FoodSelection')}>
@@ -14,22 +18,22 @@ const HomeFoodContainer = () => {
         <Text style = {{ fontFamily: 'SemiBold', fontSize: 20 }}>Food</Text>
         <IconPack name = 'coffee' size={ 20 } color={ '#7d5ada'}/>
       </View>
-      <View style = {{ alignSelf: 'center',paddingTop: 6}}>
-        <AnimatedProgressWheel 
-          size={100}
-          width={12} 
-          max={2760}
-          rounded={true}
-          color={'#bcacf2'}
-          progress={756}
-          subtitle={'kcal'}
-          showProgressLabel={true}
-          backgroundColor={'#fff'}
-          rotation={'-90deg'}
-          subtitleStyle={styles.subtitle}
-          labelStyle={styles.progressLabel}
-        />
-      </View>
+        <View style = {{ alignSelf: 'center',paddingTop: 6}}>
+            <AnimatedProgressWheel 
+              size={100}
+              width={12} 
+              max={2760}
+              rounded={true}
+              color={'#bcacf2'}
+              progress={ totalCalorie }
+              subtitle={'kcal'}
+              showProgressLabel={true}
+              backgroundColor={'#fff'}
+              rotation={'-90deg'}
+              subtitleStyle={styles.subtitle}
+              labelStyle={styles.progressLabel}
+            />
+        </View>
     </Pressable>
   )
 }

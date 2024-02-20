@@ -7,7 +7,7 @@ import NutritionBlock from '../../components/FoodBlock/NutritionBlock'
 import { SelectList } from 'react-native-dropdown-select-list'
 import { useNavigation } from '@react-navigation/native';
 import AnimatedProgressWheel from 'react-native-progress-wheel';
-
+import Icon from 'react-native-vector-icons/FontAwesome5'
 
 const FoodDescription = ({ route }) => {
 
@@ -33,9 +33,9 @@ const FoodDescription = ({ route }) => {
                     if (key !== "_id" && key !== "Name") {
                         updatedFoodItem[key] *= quantity;
                         updatedFoodItem[key] = parseFloat(updatedFoodItem[key].toFixed(2));
-                        setStoredQuantity(quantity);
                     }
                 });
+                setStoredQuantity(quantity);
                 setQuantity(1);
             } else if (measure === "2") {
                 // Update all values based on the entered grams
@@ -52,11 +52,9 @@ const FoodDescription = ({ route }) => {
     };
 
     const trackFoodItem = async () => {
-        // const currentDate = new Date();
-        // const formattedDate = currentDate.toLocaleDateString('en-CA');
         const updatedFoodItem = { ...foodItem, date: currentDate,MealTime: FoodTime,Quantity: storedQuantity, Measure: measure === '1'? 'piece': 'gram'};
 
-        await axios.post("http://192.168.186.188:8000/tracked", { foodItem: updatedFoodItem })
+        await axios.post("http://192.168.81.188:8000/tracked", { foodItem: updatedFoodItem })
         .then((response) => {
             console.log(response.data);
             
@@ -68,8 +66,6 @@ const FoodDescription = ({ route }) => {
             console.log(e);
         });
     };
-      
-
 
     return (
         <SafeAreaView style = {{ flex: 1, backgroundColor: '#f1f4f8' }}>
@@ -117,8 +113,8 @@ const FoodDescription = ({ route }) => {
                         dropdownTextStyles = {{fontSize: 16}}
                     />
 
-                    <Pressable onPress = {()=> updateQuantity()}style={{backgroundColor: '#d9d4f6', borderRadius: 5,width:60,height:'100%',height:58}}>
-                        <Text style = {{fontFamily: 'SemiBold',fontSize: 16,flex: 1,alignSelf:'center'}}></Text>
+                    <Pressable onPress = {()=> updateQuantity()}style={{backgroundColor: '#d9d4f6', borderRadius: 5,width:60,height:'100%',height:58,alignItems: 'center',justifyContent: 'center' }}>
+                        <Icon name='calculator' size={ 22 }/>
                     </Pressable>
 
                 </View>

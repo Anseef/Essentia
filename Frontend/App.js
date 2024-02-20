@@ -6,6 +6,7 @@ import RootNavigation from './screens/Root/RootNavigation';
 import FoodDescription from './screens/Food/FoodDescription'
 import FoodSelection from './screens/Food/FoodSelection'
 import FoodDetails from './screens/Food/FoodDetails';
+import { TrackedFoodsProvider } from './components/GlobalDataComponents/TotalCalorieProvider';
 
 const Stack = createNativeStackNavigator();
 
@@ -23,22 +24,24 @@ export default function App() {
   if(!loaded) return null;
 
   return (
-      <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen name="Essentia" component={RootNavigation}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen name="FoodDetails" component={FoodDetails}         
-            options={optionStyle}
-          />
-          <Stack.Screen name="FoodSelection" component={FoodSelection}
-            options={optionStyle}
-          />
-          <Stack.Screen name="FoodDescription" component={FoodDescription} 
-            options={optionStyle}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
+      <TrackedFoodsProvider>
+        <NavigationContainer>
+          <Stack.Navigator>
+              <Stack.Screen name="Essentia" component={RootNavigation}
+                options={{ headerShown: false }}
+              />
+            <Stack.Screen name="FoodDetails" component={FoodDetails}         
+              options={optionStyle}
+              />
+            <Stack.Screen name="FoodSelection" component={FoodSelection}
+              options={optionStyle}
+              />
+            <Stack.Screen name="FoodDescription" component={FoodDescription} 
+              options={optionStyle}
+              />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </TrackedFoodsProvider>
   );
 
 }

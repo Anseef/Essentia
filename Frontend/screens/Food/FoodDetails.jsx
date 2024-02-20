@@ -28,7 +28,7 @@ const FoodDetails = ({ route }) => {
     
     const fetchData = async () => {
         try {
-            const response = await axios.post("http://192.168.186.188:8000/data", { food });
+            const response = await axios.post("http://192.168.81.188:8000/data", { food });
             setDataSet(response.data);
         } catch (e) {
             console.log(e);
@@ -37,7 +37,7 @@ const FoodDetails = ({ route }) => {
     
     const fetchTrackedFoods = async () => {
         try {
-            const response = await axios.post("http://192.168.186.188:8000/trackedFoods");
+            const response = await axios.post("http://192.168.81.188:8000/trackedFoods");
             setTrackedFoods(response.data);
         } catch (e) {
             console.log(e);
@@ -66,6 +66,20 @@ const FoodDetails = ({ route }) => {
         });
         setFilteredTrackedFoods(filteredFoods);
     }, [trackedFoods, foodTime]);
+
+    // Remove food item from the array
+
+    const handleRemoveFoodItem = async (itemToRemove) => {
+        try {
+            await axios.delete(`http://192.168.81.188:8000/tracked/${itemToRemove._id}`);
+
+            const updatedFilteredFoods = filteredTrackedFoods.filter((item) => item.foodItem._id !== itemToRemove._id);
+            setFilteredTrackedFoods(updatedFilteredFoods);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+    
     
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#f1f4f8' }}>
@@ -126,7 +140,7 @@ const FoodDetails = ({ route }) => {
                         <ScrollView style={{ height: 420 }} showsVerticalScrollIndicator={false}>
                             {filteredTrackedFoods.length !== 0 ? (
                                 filteredTrackedFoods.map((foodItem, index) => (
-                                <SelectedFoods key={index} foodItemArray={foodItem} />
+                                <SelectedFoods key={index} foodItemArray={foodItem} onRemove={handleRemoveFoodItem}/>
                                 ))
                             ) : (
                                 <Text style = {{ fontFamily: 'Regular',fontSize: 16, alignSelf:'center', marginTop: 100}}>You haven't tracked any food yet</Text>

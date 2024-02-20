@@ -9,9 +9,7 @@ import HomeFoodContainer from '../../components/HomeContainers/HomeFoodContainer
 import IconPack from 'react-native-vector-icons/FontAwesome6';
 import { useNavigation } from '@react-navigation/native';
 
-
 const Homepage = () =>  {
-
   const navigation = useNavigation();
 
   return (
