@@ -20,7 +20,7 @@ app.post('/data', async (request, response) => {
   }
 });
 
-// Selected food to DB
+// Add Selected food to DB
 app.post('/tracked', async (request, response) => {
   const selectedFood = request.body;
   try {
@@ -63,6 +63,37 @@ app.delete('/tracked/:id', async (request, response) => {
     response.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
+//Update tracked foods in the DB
+
+app.put('/update/:id', async (request, response) => {
+
+  const foodItemId = request.params.id;
+  const updatedFoodItemData = request.body;
+
+  try {
+
+    const existingFoodItem = await storedFoodCollection.findOne({ 'foodItem._id' : foodItemId });
+    console.log(existingFoodItem)
+    if (existingFoodItem) {
+      const updatedFoodItem = await storedFoodCollection.findOneAndUpdate (
+        { 'foodItem._id': foodItemId },
+        { $set: updatedFoodItemData },
+        { new: true }
+      );
+  
+      console.log('Updated food item:', updatedFoodItem); // Log for verification
+      response.json("Updation Successfull");
+    } else {
+      response.status(404).json({ success: false, message: `Food item with ID ${foodItemId} not found` });
+    }
+  } catch (error) {
+    console.error(`Error updating food item: ${error}`);
+    response.status(500).json({ success: false, error: 'Internal Server Error' });
+  }
+});
+
+
 
 app.listen(8000, () => {
   console.log('Server listening on port 8000');

@@ -1,6 +1,7 @@
 import { Text, View, StyleSheet, Pressable } from 'react-native';
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
 const SelectedFoods = ({ foodItemArray, onRemove }) =>{
 
@@ -8,11 +9,17 @@ const SelectedFoods = ({ foodItemArray, onRemove }) =>{
 
   return (
 
-    <Pressable style={styles.foodBlock} 
+    <Pressable android_ripple={{ color: 'rgba(0, 0, 0, 0.1)', borderless: false }} style={styles.foodBlock} 
       onPress = { () => 
         { navigation.navigate
             ('FoodDescription',
-              { foodItem: foodItemArray.foodItem,foodTime: foodItemArray.foodItem.MealTime, todayDate: foodItemArray.foodItem.date }
+              { 
+                foodItem: foodItemArray.foodItem,
+                foodTime: foodItemArray.foodItem.MealTime,
+                todayDate: foodItemArray.foodItem.date,
+                storedQuantityFromDB: foodItemArray.foodItem.Quantity,
+                isUpdatedFood: true
+              }
             ) 
         }
       }
@@ -25,11 +32,15 @@ const SelectedFoods = ({ foodItemArray, onRemove }) =>{
         {/* Calorie and  Quantity */}
 
         <Text style={{ paddingLeft: 5, color: '#57636c',fontFamily: 'Medium',fontSize: 12 }}>{ foodItemArray.foodItem.Calories }kcal</Text>
-        <Text style={{ paddingLeft: 5, color: '#57636c',fontFamily: 'Medium',fontSize: 12 }}>{ foodItemArray.foodItem.Quantity} {foodItemArray.foodItem.Measure}</Text>
+        
+        <View style = {{ flexDirection: 'row' }}>
+          <Icon name='pencil-alt' size={ 12 } color={ '#57636c' } style = {{ paddingTop: 2 }}/>
+          <Text style={{ paddingLeft: 5, color: '#57636c',fontFamily: 'Medium',fontSize: 12 }}>{ foodItemArray.foodItem.Quantity} {foodItemArray.foodItem.Measure}</Text>
+        </View>
 
       </View>
 
-      <Pressable style={styles.button} onPress={() => onRemove(foodItemArray.foodItem) }>
+      <Pressable android_ripple={{ color: 'rgba(0, 0, 0, 0.1)', borderless: false }} style={styles.button} onPress={() => onRemove(foodItemArray.foodItem) }>
         <Text style={{ color: '#fff',fontFamily:'SemiBold',fontSize:13 }}>Remove</Text>
       </Pressable>
 

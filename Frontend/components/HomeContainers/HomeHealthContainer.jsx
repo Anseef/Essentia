@@ -5,7 +5,7 @@ import IconPack from 'react-native-vector-icons/FontAwesome6';
 const HomeHealthContainer = () => {
 
   return (
-    <Pressable style = { styles.container}  onPress={() => console.log('Health Clicked')}>
+    <Pressable android_ripple={{ color: 'rgba(0, 0, 0, 0.1)', borderless: false }} style = { styles.container}  onPress={() => console.log('Health Clicked')}>
       
       <View style = { styles.headingBlock }>
         <Text style = {{ fontFamily: 'SemiBold', fontSize: 20,paddingTop: 3 }}>Health</Text>

@@ -15,27 +15,34 @@ const FoodDescription = ({ route }) => {
 
     const [measure, setMeasure] = useState('1');
     const [ quantity, setQuantity ] = useState(1)
-    const [storedQuantity, setStoredQuantity] = useState('1');
+    const [storedQuantity, setStoredQuantity] = useState(route.params?.storedQuantityFromDB ?? '1');
     const [foodItem, setFoodItem] = useState(route.params.foodItem);
     const FoodTime = route.params.foodTime;
     const currentDate = route.params.todayDate;
-    
+
     const carbProgress = (route.params.foodItem.Carbohydrates); 
     const proteinProgress = (route.params.foodItem.Protein); 
     const fatProgress = (route.params.foodItem.Fat);
 
+
+    //For update the stored values in db
+    const isUpdatedFood = route.params?.isUpdatedFood || false;
+
+
     const updateQuantity = () => {
-        const updatedFoodItem = { ...foodItem }; // Create a copy of the object
+        const updatedFoodItem = { ...foodItem };
         if(quantity != 0) {
             if (measure === "1") {
                 // Multiply all values by the entered number of pieces
                 Object.keys(updatedFoodItem).map(key => {
                     if (key !== "_id" && key !== "Name") {
-                        updatedFoodItem[key] *= quantity;
+                        updatedFoodItem[key] *= quantity/storedQuantity;
                         updatedFoodItem[key] = parseFloat(updatedFoodItem[key].toFixed(2));
                     }
                 });
-                setStoredQuantity(quantity);
+                if(quantity !== 1){
+                    setStoredQuantity(quantity);
+                }
                 setQuantity(1);
             } else if (measure === "2") {
                 // Update all values based on the entered grams
@@ -52,19 +59,50 @@ const FoodDescription = ({ route }) => {
     };
 
     const trackFoodItem = async () => {
-        const updatedFoodItem = { ...foodItem, date: currentDate,MealTime: FoodTime,Quantity: storedQuantity, Measure: measure === '1'? 'piece': 'gram'};
+        const updatedFoodItem = { ...foodItem, date: currentDate,
+            MealTime: FoodTime,
+            Quantity: storedQuantity,
+            Measure: measure === '1' ? 'piece' : 'gram'
+        };
 
-        await axios.post("http://192.168.81.188:8000/tracked", { foodItem: updatedFoodItem })
-        .then((response) => {
-            console.log(response.data);
-            
-            if(response.data){
-                navigation.navigate('FoodDetails',{ FoodTime, currentDate });
-            }
-        })
-        .catch((e) => {
+        await axios.post("http://192.168.66.188:8000/tracked", { foodItem: updatedFoodItem })
+            .then((response) => {
+                console.log(response.data);
+                if (response.data) {
+                    navigation.navigate('FoodDetails',{ FoodTime, currentDate });
+                }
+            })
+            .catch((e) => {
             console.log(e);
-        });
+            });
+    };
+
+    const updateCurrentItem = async () => {
+
+        const updatedFoodItem = { ...foodItem, date: currentDate,
+            MealTime: FoodTime,
+            Quantity: storedQuantity,
+            Measure: measure === '1' ? 'piece' : 'gram'
+        };
+
+        await axios.put(`http://192.168.66.188:8000/update/${foodItem._id}`, { foodItem: updatedFoodItem })
+            .then((response) => {
+                console.log(response.data);
+                if (response.data) {
+                    navigation.navigate('FoodDetails', { FoodTime, currentDate });
+                }
+            })
+            .catch((e) => {
+                console.log(e);
+            });
+    };
+
+    const handleTrackButtonPress = () => {
+        if (isUpdatedFood) {
+            updateCurrentItem();
+        } else {
+            trackFoodItem();
+        }
     };
 
     return (
@@ -83,7 +121,7 @@ const FoodDescription = ({ route }) => {
                     
                 <View style = {{flexDirection:'row',justifyContent:'space-between' ,borderRadius: 10,alignItems:'flex-start' }}>
 
-                    <TextInput defaultValue={ '1' } placeholder='0' keyboardType = 'numeric' maxLength={4} style = {{
+                    <TextInput defaultValue={ storedQuantity } placeholder='0' keyboardType = 'numeric' maxLength={4} style = {{
                             width: 60, 
                             height: 58,
                             backgroundColor:'#d9d4f6',
@@ -99,13 +137,13 @@ const FoodDescription = ({ route }) => {
                     <SelectList 
                         setSelected={(value)=>{ setMeasure(value) }}
                         data={ [
-                            {key:'1', value:'Piece('+route.params.foodItem.ServingSize+'g)'},
+                            {key:'1', value:'Piece('+route.params.foodItem.ServingSize/storedQuantity+'g)'},
                             {key:'2', value:'Gram'},
                             ]
                         }
                         search = { false }
                         fontFamily='SemiBold'
-                        defaultOption = {{key:'1', value:'Piece('+route.params.foodItem.ServingSize+'g)'}}
+                        defaultOption = {{key:'1', value:'Piece('+route.params.foodItem.ServingSize/storedQuantity+'g)'}}
                         save='key'
                         boxStyles={{borderRadius:5, borderColor: 'transparent',width:240,alignItems:'center',justifyContent:'space-between',backgroundColor: '#d9d4f6',minHeight:58}}
                         inputStyles = {{fontSize: 16}}
@@ -113,7 +151,7 @@ const FoodDescription = ({ route }) => {
                         dropdownTextStyles = {{fontSize: 16}}
                     />
 
-                    <Pressable onPress = {()=> updateQuantity()}style={{backgroundColor: '#d9d4f6', borderRadius: 5,width:60,height:'100%',height:58,alignItems: 'center',justifyContent: 'center' }}>
+                    <Pressable android_ripple={{ color: 'rgba(0, 0, 0, 0.1)', borderless: false }} onPress = {()=> updateQuantity()}style={{backgroundColor: '#d9d4f6', borderRadius: 5,width:60,height:'100%',height:58,alignItems: 'center',justifyContent: 'center' }}>
                         <Icon name='calculator' size={ 22 }/>
                     </Pressable>
 
@@ -129,7 +167,7 @@ const FoodDescription = ({ route }) => {
                             <AnimatedProgressWheel 
                                 size={75}
                                 width={8} 
-                                max={100}
+                                max={100 * storedQuantity}
                                 rounded={true}
                                 color={'#f9cf58'}
                                 progress={carbProgress}
@@ -146,7 +184,7 @@ const FoodDescription = ({ route }) => {
                             <AnimatedProgressWheel 
                                 size={75}
                                 width={8} 
-                                max={100}
+                                max={100 * storedQuantity}
                                 rounded={true}
                                 color={'#31eabf'}
                                 progress={proteinProgress}
@@ -162,7 +200,7 @@ const FoodDescription = ({ route }) => {
                             <AnimatedProgressWheel 
                                 size={75}
                                 width={8} 
-                                max={100}
+                                max={100 * storedQuantity}
                                 rounded={true}
                                 color={'#ff5963'}
                                 progress={fatProgress}
@@ -198,7 +236,7 @@ const FoodDescription = ({ route }) => {
 
             </ScrollView>
             <View style = {{ backgroundColor: '#f1f4f8', width:'100%',height: 10, paddingLeft: 20,paddingRight: 20}}>
-                <Pressable  style={[styles.button]} onPress={() => trackFoodItem()}>
+                <Pressable android_ripple={{ color: 'rgba(0, 0, 0, 0.1)', borderless: false }}style={[styles.button]} onPress={() => handleTrackButtonPress()}>
                     <Text style={{ color: '#d9d4f6',fontFamily:'SemiBold',fontSize: 16,alignSelf:'center' }}>Track</Text>
                 </Pressable >
             </View>

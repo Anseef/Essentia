@@ -10,7 +10,7 @@ const FoodBlock = ({ Icon, FoodTime, trackedItems, currentDate }) => {
   const navigation = useNavigation();
 
   return (
-    <Pressable style={styles.foodBlock} onPress={() => navigation.navigate('FoodDetails', { FoodTime, currentDate })}>
+    <Pressable android_ripple={{ color: 'rgba(0, 0, 0, 0.1)', borderless: false }} style={styles.foodBlock} onPress={() => navigation.navigate('FoodDetails', { FoodTime, currentDate })}>
       <View style={{ flexDirection: 'row', alignItems:'center' }}>
         <Text style={{ paddingRight: 5 }}>
           <MaterialIcons name = { Icon } size={ 19 } color={ '#7d5ada' }/>
@@ -32,7 +32,7 @@ const FoodBlock = ({ Icon, FoodTime, trackedItems, currentDate }) => {
         </Text>
       </View>
 
-      <Pressable style={styles.button} onPress={() => navigation.navigate('FoodDetails', { FoodTime, currentDate })}>
+      <Pressable android_ripple={{ color: 'rgba(0, 0, 0, 0.1)', borderless: false }} style={styles.button} onPress={() => navigation.navigate('FoodDetails', { FoodTime, currentDate })}>
         <Text style={{ color: '#fff' }}>Add</Text>
       </Pressable>
     </Pressable>

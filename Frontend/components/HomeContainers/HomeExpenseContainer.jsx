@@ -5,7 +5,7 @@ import IconPack from 'react-native-vector-icons/FontAwesome5';
 const HomeExpenseContainer = () => {
 
   return (
-    <Pressable style = { styles.container}  onPress={() => console.log('Expense Clicked')}>
+    <Pressable android_ripple={{ color: 'rgba(0, 0, 0, 0.1)', borderless: false }} style = { styles.container}  onPress={() => console.log('Expense Clicked')}>
       <View style = { styles.headingBlock }>
         <Text style = {{ fontFamily: 'SemiBold', fontSize: 20 }}>Expenses</Text>
         <IconPack name='wallet' size={ 19 } style = {{ paddingBottom: 4 }} color={ '#7d5ada'}/>

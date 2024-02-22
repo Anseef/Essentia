@@ -28,7 +28,7 @@ const FoodDetails = ({ route }) => {
     
     const fetchData = async () => {
         try {
-            const response = await axios.post("http://192.168.81.188:8000/data", { food });
+            const response = await axios.post("http://192.168.66.188:8000/data", { food });
             setDataSet(response.data);
         } catch (e) {
             console.log(e);
@@ -37,7 +37,7 @@ const FoodDetails = ({ route }) => {
     
     const fetchTrackedFoods = async () => {
         try {
-            const response = await axios.post("http://192.168.81.188:8000/trackedFoods");
+            const response = await axios.post("http://192.168.66.188:8000/trackedFoods");
             setTrackedFoods(response.data);
         } catch (e) {
             console.log(e);
@@ -71,7 +71,7 @@ const FoodDetails = ({ route }) => {
 
     const handleRemoveFoodItem = async (itemToRemove) => {
         try {
-            await axios.delete(`http://192.168.81.188:8000/tracked/${itemToRemove._id}`);
+            await axios.delete(`http://192.168.66.188:8000/tracked/${itemToRemove._id}`);
 
             const updatedFilteredFoods = filteredTrackedFoods.filter((item) => item.foodItem._id !== itemToRemove._id);
             setFilteredTrackedFoods(updatedFilteredFoods);
@@ -80,6 +80,10 @@ const FoodDetails = ({ route }) => {
         }
     };
     
+    //Progressbar Progression
+
+    const maxDailyIntake = 2974;
+    const progressPercentage = (totalCalorie / maxDailyIntake);
     
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#f1f4f8' }}>
@@ -116,14 +120,14 @@ const FoodDetails = ({ route }) => {
                             </View>
 
                             <Progress.Bar 
-                                progress={0.6}
+                                progress={progressPercentage}
                                 width={375}
                                 color = { '#836cdd'}
                                 unfilledColor={ '#d9d4f6'}
                                 height ={ 9 }
                                 borderRadius = { 10 }
                                 borderWidth = { 0 }
-                                animated = { true } 
+                                animated = { true }
                             />
                         </View>
 
@@ -147,7 +151,7 @@ const FoodDetails = ({ route }) => {
                             )}
                         </ScrollView>
 
-                        <Pressable  style={[styles.button]} onPress={ () => { navigation.navigate('FoodSelection') }}>
+                        <Pressable android_ripple={{ color: 'rgba(0, 0, 0, 0.1)', borderless: false }} style={[styles.button]} onPress={ () => { navigation.navigate('FoodSelection') }}>
                             <Text style={{ color: '#d9d4f6',fontFamily:'SemiBold',fontSize: 14 }} >Done</Text>
                         </Pressable >
                     </View>
@@ -157,7 +161,7 @@ const FoodDetails = ({ route }) => {
                     <ScrollView style={{ width:'100%',height:'100%',padding: 20 }}>
                     <Text style = { { fontFamily: 'SemiBold', fontSize:13,paddingBottom: 10, color: '#836cdd'} }>RESULTS</Text>
                     {dataset.map((foodItem, index) => (
-                        <Pressable key={index} onPress = { () => { setFood('') ; navigation.navigate('FoodDescription',  { foodItem,foodTime,todayDate }) }} style = { styles.foodItemContainer }>
+                        <Pressable android_ripple={{ color: 'rgba(0, 0, 0, 0.1)', borderless: false }} key={index} onPress = { () => { setFood('') ; navigation.navigate('FoodDescription',  { foodItem,foodTime,todayDate }) }} style = { styles.foodItemContainer }>
                         
                             <View >
                                 <Text style = {{ fontFamily: 'SemiBold', fontSize:15 }}>{foodItem.Name}</Text>
