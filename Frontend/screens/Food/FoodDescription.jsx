@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { View, Text,StyleSheet,TextInput,StatusBar, Pressable,ScrollView } from 'react-native'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import DividerLine from '../../components/DividerLine/DividerLine'
 import NutritionBlock from '../../components/FoodBlock/NutritionBlock'
@@ -17,6 +17,7 @@ const FoodDescription = ({ route }) => {
     const [ quantity, setQuantity ] = useState(1)
     const [storedQuantity, setStoredQuantity] = useState(route.params?.storedQuantityFromDB ?? '1');
     const [foodItem, setFoodItem] = useState(route.params.foodItem);
+
     const FoodTime = route.params.foodTime;
     const currentDate = route.params.todayDate;
 
@@ -28,10 +29,16 @@ const FoodDescription = ({ route }) => {
     //For update the stored values in db
     const isUpdatedFood = route.params?.isUpdatedFood || false;
 
+    const [quantityChanged, setQuantityChanged] = useState(false);
+
+    useEffect(()=>{
+        setQuantityChanged(true)
+    },[quantity])
 
     const updateQuantity = () => {
         const updatedFoodItem = { ...foodItem };
-        if(quantity != 0) {
+        
+        if(quantityChanged && quantity != 0) {
             if (measure === "1") {
                 // Multiply all values by the entered number of pieces
                 Object.keys(updatedFoodItem).map(key => {
@@ -43,10 +50,11 @@ const FoodDescription = ({ route }) => {
                 if(quantity !== 1){
                     setStoredQuantity(quantity);
                 }
-                setQuantity(1);
+                setQuantity(0);
             } else if (measure === "2") {
                 // Update all values based on the entered grams
                 const servingSizeMultiplier = quantity / foodItem.ServingSize;
+                setStoredQuantity(quantity);
                 Object.keys(updatedFoodItem).map(key => {
                     if (key !== "_id" && key !== "Name") {
                         updatedFoodItem[key] *= servingSizeMultiplier;
@@ -56,6 +64,7 @@ const FoodDescription = ({ route }) => {
             }
         }
         setFoodItem(updatedFoodItem);
+        setQuantityChanged(false);
     };
 
     const trackFoodItem = async () => {
@@ -151,7 +160,12 @@ const FoodDescription = ({ route }) => {
                         dropdownTextStyles = {{fontSize: 16}}
                     />
 
-                    <Pressable android_ripple={{ color: 'rgba(0, 0, 0, 0.1)', borderless: false }} onPress = {()=> updateQuantity()}style={{backgroundColor: '#d9d4f6', borderRadius: 5,width:60,height:'100%',height:58,alignItems: 'center',justifyContent: 'center' }}>
+                    <Pressable 
+                        // disabled={isButtonDisabled}
+                        android_ripple={{ color: 'rgba(0, 0, 0, 0.1)', borderless: false }}
+                        onPress = {()=> { updateQuantity() }}
+                        style={{backgroundColor: '#d9d4f6', borderRadius: 5,width:60,height:'100%',height:58,alignItems: 'center',justifyContent: 'center' }}
+                    >
                         <Icon name='calculator' size={ 22 }/>
                     </Pressable>
 
