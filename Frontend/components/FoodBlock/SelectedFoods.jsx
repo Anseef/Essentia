@@ -35,7 +35,7 @@ const SelectedFoods = ({ foodItemArray, onRemove }) =>{
         
         <View style = {{ flexDirection: 'row' }}>
           <Icon name='pencil-alt' size={ 12 } color={ '#57636c' } style = {{ paddingTop: 2 }}/>
-          <Text style={{ paddingLeft: 5, color: '#57636c',fontFamily: 'Medium',fontSize: 12 }}>{ foodItemArray.foodItem.Quantity} {foodItemArray.foodItem.Measure}</Text>
+          <Text style={{ paddingLeft: 5, color: '#57636c',fontFamily: 'Medium',fontSize: 12 }}>{ foodItemArray.foodItem.Quantity} {foodItemArray.foodItem.SelectedMeasure}</Text>
         </View>
 
       </View>

@@ -6,6 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="2832923b-6f10-4980-a0f1-1c4ca2136ebc" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/components/FoodBlock/FoodBlock.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/components/FoodBlock/FoodBlock.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/components/FoodBlock/SelectedFoods.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/components/FoodBlock/SelectedFoods.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Frontend/screens/Food/FoodDescription.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/screens/Food/FoodDescription.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

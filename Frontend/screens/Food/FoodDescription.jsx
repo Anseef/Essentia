@@ -15,15 +15,31 @@ const FoodDescription = ({ route }) => {
 
     const [measure, setMeasure] = useState('1');
     const [ quantity, setQuantity ] = useState(1)
-    const [storedQuantity, setStoredQuantity] = useState(route.params?.storedQuantityFromDB ?? '1');
+    const [storedQuantity, setStoredQuantity] = useState(route.params?.storedQuantityFromDB ? route.params.storedQuantityFromDB : '1');
     const [foodItem, setFoodItem] = useState(route.params.foodItem);
 
     const FoodTime = route.params.foodTime;
     const currentDate = route.params.todayDate;
 
-    const carbProgress = (route.params.foodItem.Carbohydrates); 
-    const proteinProgress = (route.params.foodItem.Protein); 
-    const fatProgress = (route.params.foodItem.Fat);
+    // ProgressBar values
+    const [baseServQuantity,setBaseServQuantity] = useState(foodItem.ServingSize);
+    const [initialCarbValue, setInitialCarbValue] = useState(foodItem.Carbohydrates);
+    const [initialProteinValue, setInitialProteinValue] = useState(foodItem.Protein);
+    const [initialFatValue, setInitialFatValue] = useState(foodItem.Fat);
+
+    const carbProgress = initialCarbValue;
+    const proteinProgress = initialProteinValue; 
+    const fatProgress = initialFatValue;
+    const servQuantity = baseServQuantity;
+
+    useEffect(()=> {
+        if(isUpdatedFood){
+            setInitialCarbValue(initialCarbValue/storedQuantity);
+            setInitialProteinValue(initialProteinValue/storedQuantity);
+            setInitialFatValue(initialFatValue/storedQuantity);
+            setBaseServQuantity(baseServQuantity/storedQuantity)
+        }
+    },[])
 
 
     //For update the stored values in db
@@ -38,25 +54,37 @@ const FoodDescription = ({ route }) => {
     const updateQuantity = () => {
         const updatedFoodItem = { ...foodItem };
         
-        if(quantityChanged && quantity != 0) {
-            if (measure === "1") {
+        if (quantityChanged && quantity !== 0) {
+            if (measure === '1') {
                 // Multiply all values by the entered number of pieces
-                Object.keys(updatedFoodItem).map(key => {
-                    if (key !== "_id" && key !== "Name") {
-                        updatedFoodItem[key] *= quantity/storedQuantity;
+                Object.keys(updatedFoodItem).forEach(key => {
+                    if (key !== '_id' && key !== 'Name' && key !== 'Unit' && key !== 'Description' && key !== 'ItemType' && key !== 'FoodType') {
+                        updatedFoodItem[key] *= quantity / storedQuantity;
                         updatedFoodItem[key] = parseFloat(updatedFoodItem[key].toFixed(2));
                     }
                 });
-                if(quantity !== 1){
+    
+                if (quantity !== 1) {
                     setStoredQuantity(quantity);
                 }
                 setQuantity(0);
-            } else if (measure === "2") {
+            } else if (measure === '2') {
                 // Update all values based on the entered grams
                 const servingSizeMultiplier = quantity / foodItem.ServingSize;
                 setStoredQuantity(quantity);
-                Object.keys(updatedFoodItem).map(key => {
-                    if (key !== "_id" && key !== "Name") {
+    
+                Object.keys(updatedFoodItem).forEach(key => {
+                    if (key !== '_id' && key !== 'Name' && key !== 'Unit' && key !== 'Description' && key !== 'ItemType' && key !== 'FoodType') {
+                        updatedFoodItem[key] *= servingSizeMultiplier;
+                        updatedFoodItem[key] = parseFloat(updatedFoodItem[key].toFixed(2));
+                    }
+                });
+            } else if (measure === '3' || measure === '4') {
+                // Update all values for 'Half' or 'Quarter' based on original serving size
+                const servingSizeMultiplier = measure === '3' ? 0.5 : 0.25;
+    
+                Object.keys(updatedFoodItem).forEach(key => {
+                    if (key !== '_id' && key !== 'Name' && key !== 'Unit' && key !== 'Description' && key !== 'ItemType' && key !== 'FoodType') {
                         updatedFoodItem[key] *= servingSizeMultiplier;
                         updatedFoodItem[key] = parseFloat(updatedFoodItem[key].toFixed(2));
                     }
@@ -65,13 +93,14 @@ const FoodDescription = ({ route }) => {
         }
         setFoodItem(updatedFoodItem);
         setQuantityChanged(false);
-    };
+    };    
 
     const trackFoodItem = async () => {
         const updatedFoodItem = { ...foodItem, date: currentDate,
             MealTime: FoodTime,
             Quantity: storedQuantity,
-            Measure: measure === '1' ? 'piece' : 'gram'
+            FoodType: foodItem.FoodType,
+            SelectedMeasure: measure === '1' ? foodItem.ItemType : 'Gram'
         };
 
         await axios.post("http://192.168.66.188:8000/tracked", { foodItem: updatedFoodItem })
@@ -91,7 +120,8 @@ const FoodDescription = ({ route }) => {
         const updatedFoodItem = { ...foodItem, date: currentDate,
             MealTime: FoodTime,
             Quantity: storedQuantity,
-            Measure: measure === '1' ? 'piece' : 'gram'
+            FoodType: foodItem.FoodType,
+            SelectedMeasure: measure === '1' ? foodItem.ItemType : 'Gram'
         };
 
         await axios.put(`http://192.168.66.188:8000/update/${foodItem._id}`, { foodItem: updatedFoodItem })
@@ -113,7 +143,7 @@ const FoodDescription = ({ route }) => {
             trackFoodItem();
         }
     };
-
+  
     return (
         <SafeAreaView style = {{ flex: 1, backgroundColor: '#f1f4f8' }}>
             <StatusBar backgroundColor={ '#836cdf' } />
@@ -123,51 +153,63 @@ const FoodDescription = ({ route }) => {
             > 
 
                 <Text style  = {{ fontFamily: "SemiBold",fontSize:32,color: '#836cdd',marginBottom: -10,paddingTop:5}}>{foodItem.Name}</Text>
-                <Text style = {{ fontFamily: "Medium", fontSize: 13 ,color: '#acaeb3'}}>Appam is a type of thin pancake orginated from South India.</Text>
+                <Text style = {{ fontFamily: "Medium", fontSize: 13 ,color: '#acaeb3'}}>{foodItem.Description}</Text>
                 {/* Quantity */}
 
                 <Text style = { styles.SubHeading }>Quantity</Text>
                     
-                <View style = {{flexDirection:'row',justifyContent:'space-between' ,borderRadius: 10,alignItems:'flex-start' }}>
+                <View>
 
-                    <TextInput defaultValue={ storedQuantity } placeholder='0' keyboardType = 'numeric' maxLength={4} style = {{
-                            width: 60, 
-                            height: 58,
-                            backgroundColor:'#d9d4f6',
-                            paddingLeft: 0,
-                            borderRadius: 5,
-                            fontFamily: 'SemiBold',
-                            fontSize: 16,
-                            textAlign: 'center',
-                        }}
-                        onChangeText={ (quan) => { setQuantity(quan) }}
-                    />
-                    
-                    <SelectList 
-                        setSelected={(value)=>{ setMeasure(value) }}
-                        data={ [
-                            {key:'1', value:'Piece('+route.params.foodItem.ServingSize/storedQuantity+'g)'},
-                            {key:'2', value:'Gram'},
-                            ]
-                        }
-                        search = { false }
-                        fontFamily='SemiBold'
-                        defaultOption = {{key:'1', value:'Piece('+route.params.foodItem.ServingSize/storedQuantity+'g)'}}
-                        save='key'
-                        boxStyles={{borderRadius:5, borderColor: 'transparent',width:240,alignItems:'center',justifyContent:'space-between',backgroundColor: '#d9d4f6',minHeight:58}}
-                        inputStyles = {{fontSize: 16}}
-                        dropdownStyles = {{ borderColor: 'transparent',backgroundColor:'#d9d4f6',borderRadius: 5}}
-                        dropdownTextStyles = {{fontSize: 16}}
-                    />
+                    <View style = {{flexDirection:'row',justifyContent:'space-between' ,borderRadius: 10,alignItems:'flex-start' }}>
+                        <TextInput defaultValue={ String(storedQuantity) } placeholder='0' keyboardType = 'numeric' maxLength={4} style = {{
+                                width: 60, 
+                                height: 58,
+                                backgroundColor:'#d9d4f6',
+                                paddingLeft: 0,
+                                borderRadius: 5,
+                                fontFamily: 'SemiBold',
+                                fontSize: 16,
+                                textAlign: 'center',
+                            }}
+                            onChangeText={ (quan) => { setQuantity(quan) }}
+                        />
+                        
+                        <SelectList 
+                            setSelected={(value) => { setMeasure(value) }}
+                            data={foodItem.FoodType === 'Side' ?
+                                [
+                                    { key: '1', value: isUpdatedFood ? foodItem.ItemType + '(' + servQuantity + 'g)' : foodItem.ItemType + '(' + route.params.foodItem.ServingSize + 'g)' },
+                                    { key: '2', value: 'Gram' },
+                                    { key: '3', value: 'Half' },
+                                    { key: '4', value: 'Quarter' }
+                                ] :
+                                [
+                                    { key: '1', value: isUpdatedFood ? foodItem.ItemType + '(' + servQuantity + 'g)' : foodItem.ItemType + '(' + route.params.foodItem.ServingSize + 'g)' },
+                                    { key: '2', value: 'Gram' },
+                                ]
+                            }
+                            search={false}
+                            fontFamily='SemiBold'
+                            defaultOption={{
+                                key: '1',
+                                value: isUpdatedFood ? foodItem.ItemType + '(' + route.params.foodItem.ServingSize/storedQuantity + 'g)' : foodItem.ItemType + '(' + route.params.foodItem.ServingSize + 'g)'
+                            }}
+                            save='key'
+                            boxStyles={{ borderRadius: 5, borderColor: 'transparent', width: 240, alignItems: 'center', justifyContent: 'space-between', backgroundColor: '#d9d4f6', minHeight: 58 }}
+                            inputStyles={{ fontSize: 16 }}
+                            dropdownStyles={{ borderColor: 'transparent', backgroundColor: '#d9d4f6', borderRadius: 5 }}
+                            dropdownTextStyles={{ fontSize: 16 }}
+                        />
 
-                    <Pressable 
-                        // disabled={isButtonDisabled}
-                        android_ripple={{ color: 'rgba(0, 0, 0, 0.1)', borderless: false }}
-                        onPress = {()=> { updateQuantity() }}
-                        style={{backgroundColor: '#d9d4f6', borderRadius: 5,width:60,height:'100%',height:58,alignItems: 'center',justifyContent: 'center' }}
-                    >
-                        <Icon name='calculator' size={ 22 }/>
-                    </Pressable>
+
+                        <Pressable 
+                            android_ripple={{ color: 'rgba(0, 0, 0, 0.1)', borderless: false }}
+                            onPress = {()=> { updateQuantity() }}
+                            style={{backgroundColor: '#d9d4f6', borderRadius: 5,width:60,height:'100%',height:58,alignItems: 'center',justifyContent: 'center' }}
+                        >
+                            <Icon name='calculator' size={ 22 }/>
+                        </Pressable>
+                    </View>
 
                 </View>
 
@@ -181,7 +223,7 @@ const FoodDescription = ({ route }) => {
                             <AnimatedProgressWheel 
                                 size={75}
                                 width={8} 
-                                max={100 * storedQuantity}
+                                max={100}
                                 rounded={true}
                                 color={'#f9cf58'}
                                 progress={carbProgress}
@@ -198,7 +240,7 @@ const FoodDescription = ({ route }) => {
                             <AnimatedProgressWheel 
                                 size={75}
                                 width={8} 
-                                max={100 * storedQuantity}
+                                max={100}
                                 rounded={true}
                                 color={'#31eabf'}
                                 progress={proteinProgress}
@@ -214,7 +256,7 @@ const FoodDescription = ({ route }) => {
                             <AnimatedProgressWheel 
                                 size={75}
                                 width={8} 
-                                max={100 * storedQuantity}
+                                max={100}
                                 rounded={true}
                                 color={'#ff5963'}
                                 progress={fatProgress}

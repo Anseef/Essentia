@@ -2,7 +2,6 @@ import { Text, View, StyleSheet, Pressable } from 'react-native';
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import MaterialCommunnityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const FoodBlock = ({ Icon, FoodTime, trackedItems, currentDate }) => {
   const totalCaloriePerTime = trackedItems.reduce((total, item) => total + item.foodItem.Calories, 0);
