@@ -3,6 +3,8 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import RootNavigation from './screens/Root/RootNavigation';
+import AuthNavigation from './screens/Auth/AuthNavigation';
+
 import FoodDescription from './screens/Food/FoodDescription'
 import FoodSelection from './screens/Food/FoodSelection'
 import FoodDetails from './screens/Food/FoodDetails';
@@ -27,18 +29,23 @@ export default function App() {
       <TrackedFoodsProvider>
         <NavigationContainer>
           <Stack.Navigator>
-              <Stack.Screen name="Essentia" component={RootNavigation}
+            <Stack.Screen name='Auth' component={AuthNavigation}
+              options={{ headerShown: false}}
+            />
+            <Stack.Screen name="Essentia" component={RootNavigation}
                 options={{ headerShown: false }}
-              />
+            />
+
             <Stack.Screen name="FoodDetails" component={FoodDetails}         
               options={optionStyle}
-              />
+            />
             <Stack.Screen name="FoodSelection" component={FoodSelection}
               options={optionStyle}
-              />
+            />
             <Stack.Screen name="FoodDescription" component={FoodDescription} 
               options={optionStyle}
-              />
+            />
+
           </Stack.Navigator>
         </NavigationContainer>
       </TrackedFoodsProvider>
