@@ -2,6 +2,7 @@ import { useFonts } from 'expo-font';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
+import WelcomePage from './screens/Auth/WelcomePage.jsx'
 import RootNavigation from './screens/Root/RootNavigation';
 import AuthNavigation from './screens/Auth/AuthNavigation';
 
@@ -9,6 +10,7 @@ import FoodDescription from './screens/Food/FoodDescription'
 import FoodSelection from './screens/Food/FoodSelection'
 import FoodDetails from './screens/Food/FoodDetails';
 import { TrackedFoodsProvider } from './components/GlobalDataComponents/TotalCalorieProvider';
+import { AuthProvider } from './components/GlobalDataComponents/AuthProvider.jsx';
 
 const Stack = createNativeStackNavigator();
 
@@ -27,27 +29,31 @@ export default function App() {
 
   return (
       <TrackedFoodsProvider>
-        <NavigationContainer>
-          <Stack.Navigator>
-            <Stack.Screen name='Auth' component={AuthNavigation}
-              options={{ headerShown: false}}
-            />
-            <Stack.Screen name="Essentia" component={RootNavigation}
+        <AuthProvider>
+          <NavigationContainer>
+            <Stack.Navigator>
+              <Stack.Screen name="Welcome" component={WelcomePage}
                 options={{ headerShown: false }}
-            />
+              />
+              <Stack.Screen name='Auth' component={AuthNavigation}
+                options={{ headerShown: false}}
+              />
+              <Stack.Screen name="Essentia" component={RootNavigation}
+                  options={{ headerShown: false }}
+              />
+              <Stack.Screen name="FoodDetails" component={FoodDetails}         
+                options={optionStyle}
+              />
+              <Stack.Screen name="FoodSelection" component={FoodSelection}
+                options={optionStyle}
+              />
+              <Stack.Screen name="FoodDescription" component={FoodDescription} 
+                options={optionStyle}
+              />
 
-            <Stack.Screen name="FoodDetails" component={FoodDetails}         
-              options={optionStyle}
-            />
-            <Stack.Screen name="FoodSelection" component={FoodSelection}
-              options={optionStyle}
-            />
-            <Stack.Screen name="FoodDescription" component={FoodDescription} 
-              options={optionStyle}
-            />
-
-          </Stack.Navigator>
-        </NavigationContainer>
+            </Stack.Navigator>
+          </NavigationContainer>
+        </AuthProvider>
       </TrackedFoodsProvider>
   );
 

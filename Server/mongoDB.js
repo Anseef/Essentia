@@ -4,6 +4,7 @@ const uri = 'mongodb://127.0.0.1:27017/'; //local URL
 const dbName = 'essentia'; //Database info
 const foodCollection = 'foodDetails'
 const sFoodsCollection = 'storedFoods'
+const usersCollection = 'users'
 
 const client = new MongoClient(uri);//DB connection
 client.connect()
@@ -12,5 +13,7 @@ client.connect()
 
 const database = client.db(dbName);
 const foodDetailsCollection = database.collection(foodCollection);
-const storedFoodCollection = database.collection(sFoodsCollection)
-module.exports = { foodDetailsCollection, storedFoodCollection }
+const storedFoodCollection = database.collection(sFoodsCollection);
+const userDetailsCollection = database.collection(usersCollection);
+
+module.exports = { foodDetailsCollection, storedFoodCollection, userDetailsCollection }

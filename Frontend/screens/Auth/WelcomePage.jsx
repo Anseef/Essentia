@@ -17,10 +17,10 @@ const Signup = () => {
                 </LinearGradient>
                     <Image style={{width: 430, height: 400,alignSelf:'center',marginTop: 15}} source={require('../../assets/images/berries.png')} />
                     <View style={{alignItems: 'center',marginTop: 40}}>
-                        <Pressable style = {[styles.buttonStyle, {backgroundColor: '#836cdd', borderColor: '#836cdd'}]} onPress={()=> navigation.navigate("Login")}>
+                        <Pressable style = {[styles.buttonStyle, {backgroundColor: '#836cdd', borderColor: '#836cdd'}]} onPress={()=> navigation.navigate('Auth', { screen: 'Login' })}>
                             <Text style={[styles.buttonText, {color: '#fff'}]}>Login</Text>
                         </Pressable>
-                        <Pressable style={[styles.buttonStyle, { borderColor: '#836cdd' }]} onPress={()=> navigation.navigate("Signup")}>
+                        <Pressable style={[styles.buttonStyle, { borderColor: '#836cdd' }]} onPress={()=> navigation.navigate('Auth', { screen: 'Signup' })}>
                             <Text style={[styles.buttonText, {color: '#836cdd'}]}>Sign Up</Text>
                         </Pressable>
                     </View>
