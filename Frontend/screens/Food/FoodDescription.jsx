@@ -103,7 +103,7 @@ const FoodDescription = ({ route }) => {
             SelectedMeasure: measure === '1' ? foodItem.ItemType : 'Gram'
         };
 
-        await axios.post("http://192.168.66.188:8000/tracked", { foodItem: updatedFoodItem })
+        await axios.post("http://192.168.205.188:8000/tracked", { foodItem: updatedFoodItem })
             .then((response) => {
                 console.log(response.data);
                 if (response.data) {
@@ -124,7 +124,7 @@ const FoodDescription = ({ route }) => {
             SelectedMeasure: measure === '1' ? foodItem.ItemType : 'Gram'
         };
 
-        await axios.put(`http://192.168.66.188:8000/update/${foodItem._id}`, { foodItem: updatedFoodItem })
+        await axios.put(`http://192.168.205.188:8000/update/${foodItem._id}`, { foodItem: updatedFoodItem })
             .then((response) => {
                 console.log(response.data);
                 if (response.data) {

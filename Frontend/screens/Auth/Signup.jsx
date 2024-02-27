@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, Pressable } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Pressable, StatusBar } from 'react-native';
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
-
+import FontAwesomeIcons from 'react-native-vector-icons/FontAwesome'
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import { LinearGradient } from "expo-linear-gradient";
 const Signup = () => {
   const navigation = useNavigation();
 
@@ -77,79 +79,132 @@ const Signup = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Register</Text>
-      {error && <Text style={styles.errorText}>{error}</Text>}
-      <TextInput
-        style={styles.input}
-        placeholder="Name"
-        autoCapitalize="none"
-        onChangeText={(text) => setUsername(text)}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        autoCapitalize="none"
-        onChangeText={(text) => setEmail(text)}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        secureTextEntry={true}
-        onChangeText={(text) => setPassword(text)}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Confirm Password"
-        secureTextEntry={true}
-        onChangeText={(text) => setConfirmPassword(text)}
-      />
-      <View style={{flexDirection: 'row',gap: 10}}>
-        <Pressable style={styles.button} onPress={handleRegister}>
-            <Text style={styles.buttonText}>Register</Text>
-        </Pressable>
-        <Pressable style={styles.button} onPress={() => navigation.navigate('Login')}>
-          <Text style={styles.buttonText}>Login</Text>
-        </Pressable>
-      </View>
-    </View>
+        <LinearGradient colors={["#bf9cf0", "#d0cae9" ]} style={styles.container}>
+          <StatusBar backgroundColor={ '#bf9cf0' } barStyle = "dark-content"/>
+          <View style={{ width: '100%' ,alignItems: 'flex-start'}}>
+            <Pressable onPress={()=>navigation.goBack()}>
+              <Ionicons name='chevron-back-outline' size={ 30 }/>
+            </Pressable>
+          </View>
+
+          <Text style={styles.title}>Create your Account</Text>
+          {error && <Text style={styles.errorText}>{error}</Text>}
+          <View style={styles.inputContainer}>
+            <FontAwesomeIcons name="user" size={20} color="#73549e" style={styles.iconStyle}/>
+            <TextInput
+              style={styles.input}
+              placeholder="Username"
+              placeholderTextColor="#73549e"
+              autoCapitalize="none"
+              onChangeText={(text) => setUsername(text)}
+            />
+          </View>
+
+          <View style={styles.inputContainer}>
+            <Ionicons name="mail" size={17} color="#73549e" style={[styles.iconStyle, {marginLeft:-2}]}/>
+            <TextInput
+              style={styles.input}
+              placeholder="Email"
+              placeholderTextColor="#73549e"
+              autoCapitalize="none"
+              onChangeText={(text) => setEmail(text)}
+            />
+          </View>
+
+          <View style={styles.inputContainer}>
+            <FontAwesomeIcons name="lock" size={20} color="#73549e" style={styles.iconStyle}/>
+            <TextInput
+              style={styles.input}
+              placeholder="Password"
+              placeholderTextColor="#73549e"
+              secureTextEntry={true}
+              autoCapitalize="none"
+              onChangeText={(text) => setPassword(text)}
+            />
+          </View>
+
+          <View style={styles.inputContainer}>
+            <FontAwesomeIcons name="lock" size={20} color="#73549e" style={styles.iconStyle}/>
+            <TextInput
+              style={styles.input}
+              placeholder="Confirm Password"
+              placeholderTextColor="#73549e"
+              secureTextEntry={true}
+              autoCapitalize="none"
+              onChangeText={(text) => setConfirmPassword(text)}
+            />
+          </View>
+
+          <View style={{ width: '100%'}}>
+            <Pressable style={styles.button} onPress={handleRegister}>
+                <Text style={styles.buttonText}>Sign up</Text>
+            </Pressable>
+
+            <View style={{flexDirection: 'row', justifyContent: 'center',marginTop: 150}}>
+              <Text style={{fontFamily: 'SemiBold', color: '#30293b'}}>Already have an account? </Text>
+              <Pressable onPress={() => navigation.navigate('Login')}>
+                <Text style={{ color: '#73549e',fontFamily:'SemiBold' }}>Login</Text>
+              </Pressable>
+            </View>
+
+          </View>
+
+      </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    padding: 25,
     alignItems: 'center',
     justifyContent: 'center',
   },
   title: {
-    fontSize: 24,
-    fontWeight: 'bold',
+    fontSize: 42,
+    fontFamily: 'Bold',
     marginBottom: 20,
+    alignSelf: 'flex-start',
+    marginTop:60
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    position: 'relative',
+    marginBottom: 10
+  },
+  iconStyle: {
+    position: 'absolute',
+    zIndex: 1,
+    top: 19.5,
+    left:14,
   },
   input: {
-    height: 40,
+    height: 60,
     width: '100%',
-    borderColor: 'gray',
-    borderWidth: 1,
-    borderRadius: 5,
+    borderRadius: 10,
     padding: 10,
+    paddingLeft:40,
     marginBottom: 10,
+    backgroundColor: '#e8defa',
+    fontFamily: 'SemiBold',
+    fontSize: 15,
+    color: '#73549e'
   },
   errorText: {
     color: 'red',
     marginBottom: 10,
   },
   button: {
-    backgroundColor: '#0099cc',
+    backgroundColor: '#ad8df0',
     padding: 15,
-    borderRadius: 5,
+    borderRadius:10,
+    width: '100%',
   },
   buttonText: {
     color: '#fff',
     fontSize: 16,
     textAlign: 'center',
+    fontFamily:'SemiBold'
   }
 });
 

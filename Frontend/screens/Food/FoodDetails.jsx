@@ -28,7 +28,7 @@ const FoodDetails = ({ route }) => {
     
     const fetchData = async () => {
         try {
-            const response = await axios.post("http://192.168.66.188:8000/data", { food });
+            const response = await axios.post("http://192.168.205.188:8000/data", { food });
             setDataSet(response.data);
         } catch (e) {
             console.log(e);
@@ -37,7 +37,7 @@ const FoodDetails = ({ route }) => {
     
     const fetchTrackedFoods = async () => {
         try {
-            const response = await axios.post("http://192.168.66.188:8000/trackedFoods");
+            const response = await axios.post("http://192.168.205.188:8000/trackedFoods");
             setTrackedFoods(response.data);
         } catch (e) {
             console.log(e);
@@ -71,7 +71,7 @@ const FoodDetails = ({ route }) => {
 
     const handleRemoveFoodItem = async (itemToRemove) => {
         try {
-            await axios.delete(`http://192.168.66.188:8000/tracked/${itemToRemove._id}`);
+            await axios.delete(`http://192.168.205.188:8000/tracked/${itemToRemove._id}`);
 
             const updatedFilteredFoods = filteredTrackedFoods.filter((item) => item.foodItem._id !== itemToRemove._id);
             setFilteredTrackedFoods(updatedFilteredFoods);

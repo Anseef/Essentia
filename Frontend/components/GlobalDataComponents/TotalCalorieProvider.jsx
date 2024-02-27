@@ -22,7 +22,7 @@ export const TrackedFoodsProvider = ({ children }) => {
     };
     const fetchTrackedFoods = async () => {
         try {
-        const response = await axios.post("http://192.168.66.188:8000/trackedFoods");
+        const response = await axios.post("http://192.168.205.188:8000/trackedFoods");
         setTrackedFoods(response.data);
         } catch (e) {
         console.log(e);
