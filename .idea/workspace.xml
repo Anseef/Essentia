@@ -6,14 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="2832923b-6f10-4980-a0f1-1c4ca2136ebc" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/components/GlobalDataComponents/TotalCalorieProvider.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/components/GlobalDataComponents/TotalCalorieProvider.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/screens/Auth/Login.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/screens/Auth/Login.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Frontend/screens/Auth/Signup.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/screens/Auth/Signup.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/screens/Food/FoodDescription.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/screens/Food/FoodDescription.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/screens/Food/FoodDetails.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/screens/Food/FoodDetails.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/screens/Food/FoodSelection.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/screens/Food/FoodSelection.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/node_modules/.package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Server/node_modules/.package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Server/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/Server/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

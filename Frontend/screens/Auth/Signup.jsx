@@ -4,7 +4,9 @@ import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
 import FontAwesomeIcons from 'react-native-vector-icons/FontAwesome'
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import AntIcon from 'react-native-vector-icons/AntDesign';
 import { LinearGradient } from "expo-linear-gradient";
+
 const Signup = () => {
   const navigation = useNavigation();
 
@@ -14,7 +16,11 @@ const Signup = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
 
-  // Move the validateEmail function outside of handleRegister
+  const [usernameError, setUsernameError] = useState(false)
+  const [emailError, setEmailError] = useState(false)
+  const [passwordError, setPasswordError] = useState(false)
+  const [confirmPassError, setConfirmPassError] = useState(false)
+
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const invalidCharacters = /[\x00-\x1F\x7F<>!#$%^&*`{}|\\]/g;
@@ -29,31 +35,35 @@ const Signup = () => {
 
   const handleRegister = async () => {
     setError('');
+    setUsernameError(false);
+    setPasswordError(false);
+    setEmailError(false);
+    setConfirmPassError(false);
 
     if (!username) {
       setError('Please enter a username.');
-      return;
+      setUsernameError(true);
     }
 
     if (!email || !validateEmail(email)) {
       setError('Please enter a valid email address.');
-      return;
+      setEmailError(true);
     }
 
     if (!password) {
       setError('Please enter a password.');
-      return;
+      setPasswordError(true);
     }
 
     if (password != confirmPassword) {
       setError('Passwords do not match.');
-      return;
+      setConfirmPassError(true);
     }
 
     const passwordRegex = /^(?=.*\W)[a-zA-Z\d\W]{8,}$/;
     if (!passwordRegex.test(password)) {
       setError('Password must contain at least one special character.');
-      return;
+      setPasswordError(true);
     }
 
     const userData = {
@@ -82,13 +92,12 @@ const Signup = () => {
         <LinearGradient colors={["#bf9cf0", "#d0cae9" ]} style={styles.container}>
           <StatusBar backgroundColor={ '#bf9cf0' } barStyle = "dark-content"/>
           <View style={{ width: '100%' ,alignItems: 'flex-start'}}>
-            <Pressable onPress={()=>navigation.goBack()}>
+            <Pressable onPress={()=>navigation.goBack()} style = {{marginLeft: -15}}>
               <Ionicons name='chevron-back-outline' size={ 30 }/>
             </Pressable>
           </View>
 
           <Text style={styles.title}>Create your Account</Text>
-          {error && <Text style={styles.errorText}>{error}</Text>}
           <View style={styles.inputContainer}>
             <FontAwesomeIcons name="user" size={20} color="#73549e" style={styles.iconStyle}/>
             <TextInput
@@ -98,6 +107,7 @@ const Signup = () => {
               autoCapitalize="none"
               onChangeText={(text) => setUsername(text)}
             />
+            {usernameError && <AntIcon name='exclamationcircle' style={styles.errorIcon} size={ 17 } color={ 'crimson' }/>}
           </View>
 
           <View style={styles.inputContainer}>
@@ -109,6 +119,7 @@ const Signup = () => {
               autoCapitalize="none"
               onChangeText={(text) => setEmail(text)}
             />
+            {emailError && <AntIcon name='exclamationcircle' style={styles.errorIcon} size={ 17 } color={ 'crimson' }/>}
           </View>
 
           <View style={styles.inputContainer}>
@@ -121,6 +132,7 @@ const Signup = () => {
               autoCapitalize="none"
               onChangeText={(text) => setPassword(text)}
             />
+            {passwordError && <AntIcon name='exclamationcircle' style={styles.errorIcon} size={ 17 } color={ 'crimson' }/>}
           </View>
 
           <View style={styles.inputContainer}>
@@ -133,6 +145,7 @@ const Signup = () => {
               autoCapitalize="none"
               onChangeText={(text) => setConfirmPassword(text)}
             />
+            {confirmPassError && <AntIcon name='exclamationcircle' style={styles.errorIcon} size={ 17 } color={ 'crimson' }/>}
           </View>
 
           <View style={{ width: '100%'}}>
@@ -178,6 +191,11 @@ const styles = StyleSheet.create({
     top: 19.5,
     left:14,
   },
+  errorIcon: {
+    position: 'absolute',
+    top: 19.5,
+    right: 15,
+  },
   input: {
     height: 60,
     width: '100%',
@@ -202,7 +220,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: 17,
     textAlign: 'center',
     fontFamily:'SemiBold'
   }
