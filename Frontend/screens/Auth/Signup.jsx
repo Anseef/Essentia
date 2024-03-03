@@ -74,7 +74,7 @@ const Signup = () => {
     
     if(error === '') {
       try {
-        const response = await axios.post("http://192.168.205.188:8888/register", userData);
+        const response = await axios.post("http://192.168.222.188:8888/register", userData);
     
         if (response.data.status === 'ok') {
           navigation.navigate("Login");

@@ -28,7 +28,7 @@ export default function App() {
   if(!loaded) return null;
 
   return (
-      <TrackedFoodsProvider>
+      // <TrackedFoodsProvider>
         <AuthProvider>
           <NavigationContainer>
             <Stack.Navigator>
@@ -54,7 +54,7 @@ export default function App() {
             </Stack.Navigator>
           </NavigationContainer>
         </AuthProvider>
-      </TrackedFoodsProvider>
+      // </TrackedFoodsProvider>
   );
 
 }

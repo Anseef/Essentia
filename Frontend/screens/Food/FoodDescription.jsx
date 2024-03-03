@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { View, Text,StyleSheet,TextInput,StatusBar, Pressable,ScrollView } from 'react-native'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import DividerLine from '../../components/DividerLine/DividerLine'
 import NutritionBlock from '../../components/FoodBlock/NutritionBlock'
@@ -9,9 +9,14 @@ import { useNavigation } from '@react-navigation/native';
 import AnimatedProgressWheel from 'react-native-progress-wheel';
 import Icon from 'react-native-vector-icons/FontAwesome5'
 
+import { AuthContent } from '../../components/GlobalDataComponents/AuthProvider';
+
 const FoodDescription = ({ route }) => {
 
     const navigation = useNavigation();
+
+    //Fetching userData from AuthProvider
+    const { userData } = useContext(AuthContent);
 
     const [measure, setMeasure] = useState('1');
     const [ quantity, setQuantity ] = useState(1)
@@ -93,17 +98,18 @@ const FoodDescription = ({ route }) => {
         }
         setFoodItem(updatedFoodItem);
         setQuantityChanged(false);
-    };    
+    };
 
     const trackFoodItem = async () => {
         const updatedFoodItem = { ...foodItem, date: currentDate,
             MealTime: FoodTime,
             Quantity: storedQuantity,
             FoodType: foodItem.FoodType,
-            SelectedMeasure: measure === '1' ? foodItem.ItemType : 'Gram'
+            SelectedMeasure: measure === '1' ? foodItem.ItemType : 'Gram',
+            userId: userData._id,
         };
 
-        await axios.post("http://192.168.205.188:8000/tracked", { foodItem: updatedFoodItem })
+        await axios.post("http://192.168.222.188:8000/tracked", { foodItem: updatedFoodItem })
             .then((response) => {
                 console.log(response.data);
                 if (response.data) {
@@ -121,10 +127,11 @@ const FoodDescription = ({ route }) => {
             MealTime: FoodTime,
             Quantity: storedQuantity,
             FoodType: foodItem.FoodType,
-            SelectedMeasure: measure === '1' ? foodItem.ItemType : 'Gram'
+            SelectedMeasure: measure === '1' ? foodItem.ItemType : 'Gram',
+            userId: userData._id
         };
 
-        await axios.put(`http://192.168.205.188:8000/update/${foodItem._id}`, { foodItem: updatedFoodItem })
+        await axios.put(`http://192.168.222.188:8000/update/${foodItem._id}`, { foodItem: updatedFoodItem })
             .then((response) => {
                 console.log(response.data);
                 if (response.data) {

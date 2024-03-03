@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { View, Text, StyleSheet,StatusBar, ScrollView,Pressable } from 'react-native'
-import React, { useEffect } from 'react'
-import { useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import { useFocusEffect } from '@react-navigation/native';
 import CalorieCard from '../../components/CalorieCard'
 import FoodBlock from '../../components/FoodBlock/FoodBlock'
@@ -9,6 +8,7 @@ import { LinearGradient } from 'expo-linear-gradient'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import IoniIcons from 'react-native-vector-icons/Ionicons'
 
+import { AuthContent } from '../../components/GlobalDataComponents/AuthProvider';
 const FoodSelection = () => {
     
     const [totalCalorie,setTotalCalorie] = useState(0);
@@ -16,10 +16,13 @@ const FoodSelection = () => {
     const [filteredTrackedFoods, setFilteredTrackedFoods] = useState([]);
     const [todayDate,setTodayDate] = useState(new Date())
     
+    const { userData } = useContext(AuthContent);
+    const userId = userData._id;
+
     //fetch tracked foods from DB
     const fetchTrackedFoods = async () => {
         try {
-            const response = await axios.post("http://192.168.205.188:8000/trackedFoods");
+            const response = await axios.post("http://192.168.222.188:8000/trackedFoods", { userId });
             setTrackedItems(response.data);
             
         } catch (e) {
@@ -35,7 +38,7 @@ const FoodSelection = () => {
 
     //Filtering the foods based on current date and mealtime
     const filterTrackedItems = (foodTime) => {
-        return trackedItems.filter(item => item.foodItem.MealTime === foodTime && item.foodItem.date === todayDate);
+        return trackedItems.filter(item => item.foodItem.MealTime === foodTime && item.foodItem.date === todayDate && item.foodItem);
     };
     useEffect(() => {
         const todayTrackedItem = trackedItems.filter(item => item.foodItem.date === todayDate);

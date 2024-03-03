@@ -36,14 +36,19 @@ app.post('/tracked', async (request, response) => {
 
 // Fetch tracked food from DB
 app.post('/trackedFoods', async (request, response) => {
-  try {
-    const fetchSelected = await storedFoodCollection.find().toArray();
-    if (fetchSelected) {
-      response.json(fetchSelected);
+  const userId = request.body.userId;
+  // console.log(userId)
+  if(userId) {
+    try {
+      const fetchSelected = await storedFoodCollection.find({ 'foodItem.userId': userId }).toArray();
+      // console.log(fetchSelected)
+      if (fetchSelected) {
+        response.json(fetchSelected);
+      }
+    } catch (e) {
+      console.log(e);
+      response.status(500).json({ error: 'Internal Server Error' });
     }
-  } catch (e) {
-    console.log(e);
-    response.status(500).json({ error: 'Internal Server Error' });
   }
 });
 

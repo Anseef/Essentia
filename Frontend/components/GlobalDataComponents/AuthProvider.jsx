@@ -4,13 +4,16 @@ import axios from 'axios';
 const AuthContent = createContext({ userToken: null, setUserToken: () => {}, clearToken: () => {} });
 
 const AuthProvider = ({ children }) => {
+
+  const localIP = '192.168.222.188';
+
   const [userToken, setUserToken] = useState(null);
   const [userData, setUserData] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const fetchUserData = async () => {
     try {
-      const response = await axios.post('http://192.168.205.188:8888/user-data', { token: userToken });
+      const response = await axios.post('http://192.168.222.188:8888/user-data', { token: userToken });
       setUserData(response.data.data);
     } catch (error) {
       console.error('Error fetching user data:', error);
@@ -33,7 +36,7 @@ const AuthProvider = ({ children }) => {
   }, [isLoggedIn]);
 
   return (
-    <AuthContent.Provider value={{ setUserToken, userData, clearToken, setIsLoggedIn }}>
+    <AuthContent.Provider value={{ setUserToken, userData, clearToken, setIsLoggedIn, localIP }}>
       {children}
     </AuthContent.Provider>
   );

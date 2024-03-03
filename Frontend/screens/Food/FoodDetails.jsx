@@ -1,15 +1,16 @@
 import axios from 'axios';
 import { View, Text, TextInput,StyleSheet,ScrollView, Pressable,StatusBar } from 'react-native'
-import React, { useEffect } from 'react'
-import { useFocusEffect } from '@react-navigation/native';
+import React, { useEffect, useContext } from 'react'
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context'
 import CalorieCard from '../../components/CalorieCard'
 import { LinearGradient } from "expo-linear-gradient";
 import * as Progress from 'react-native-progress'
 import SelectedFoods from '../../components/FoodBlock/SelectedFoods'
 import { useState } from 'react'
-import { useNavigation } from '@react-navigation/native';
 import IonIcons from 'react-native-vector-icons/Ionicons'
+
+import { AuthContent } from '../../components/GlobalDataComponents/AuthProvider';
 
 const FoodDetails = ({ route }) => {
     
@@ -21,14 +22,17 @@ const FoodDetails = ({ route }) => {
     const [trackedFoods, setTrackedFoods] = useState([]);
     const [filteredTrackedFoods, setFilteredTrackedFoods] = useState([]);
     const [totalCalorie, setTotalCalorie] = useState(0);
-    
+
+    const { userData } = useContext(AuthContent);
+    const userId = userData?._id;
+
     const navigation = useNavigation();
     
     //Fetch food data from backend
     
     const fetchData = async () => {
         try {
-            const response = await axios.post("http://192.168.205.188:8000/data", { food });
+            const response = await axios.post("http://192.168.222.188:8000/data", { food });
             setDataSet(response.data);
         } catch (e) {
             console.log(e);
@@ -36,15 +40,17 @@ const FoodDetails = ({ route }) => {
     }
     
     const fetchTrackedFoods = async () => {
-        try {
-            const response = await axios.post("http://192.168.205.188:8000/trackedFoods");
-            setTrackedFoods(response.data);
-        } catch (e) {
-            console.log(e);
+        if(userId) {
+            try {
+                const response = await axios.post("http://192.168.222.188:8000/trackedFoods", { userId });
+                setTrackedFoods(response.data);
+            } catch (e) {
+                console.log(e);
+            }
         }
     };
 
-    //Fetch Tracked food based on the food time 
+    //Fetch Tracked food based on the food time and userID
     useFocusEffect(
         React.useCallback(() => {
             fetchTrackedFoods();
@@ -71,7 +77,7 @@ const FoodDetails = ({ route }) => {
 
     const handleRemoveFoodItem = async (itemToRemove) => {
         try {
-            await axios.delete(`http://192.168.205.188:8000/tracked/${itemToRemove._id}`);
+            await axios.delete(`http://192.168.222.188:8000/tracked/${itemToRemove._id}`);
 
             const updatedFilteredFoods = filteredTrackedFoods.filter((item) => item.foodItem._id !== itemToRemove._id);
             setFilteredTrackedFoods(updatedFilteredFoods);

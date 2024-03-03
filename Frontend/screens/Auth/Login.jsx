@@ -6,9 +6,11 @@ import FontAwesomeIcons from 'react-native-vector-icons/FontAwesome'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import { AuthContent } from '../../components/GlobalDataComponents/AuthProvider';
+
 import { LinearGradient } from "expo-linear-gradient";
 
 const Login = () => {
+
   const { setUserToken, setIsLoggedIn } = useContext(AuthContent);
 
   const navigation = useNavigation();
@@ -41,7 +43,7 @@ const Login = () => {
 
     try {
       const response = await axios.post(
-        "http://192.168.205.188:8888/login-user",
+        "http://192.168.222.188:8888/login-user",
         userLoginData
       );
 
