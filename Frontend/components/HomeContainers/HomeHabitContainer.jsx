@@ -1,4 +1,4 @@
-import { CheckBox,View, Text, Pressable, StyleSheet } from 'react-native'
+import { View, Text, Pressable, StyleSheet } from 'react-native'
 import React from 'react'
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import IconPack from 'react-native-vector-icons/FontAwesome5';
