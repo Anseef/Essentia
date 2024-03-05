@@ -5,11 +5,9 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import WelcomePage from './screens/Auth/WelcomePage.jsx'
 import RootNavigation from './screens/Root/RootNavigation';
 import AuthNavigation from './screens/Auth/AuthNavigation';
+import FoodNavigation from './screens/Food/FoodNavigation.jsx';
+import HabitNavigation from './screens/Habit/HabitNavigation.jsx';
 
-import FoodDescription from './screens/Food/FoodDescription'
-import FoodSelection from './screens/Food/FoodSelection'
-import FoodDetails from './screens/Food/FoodDetails';
-import { TrackedFoodsProvider } from './components/GlobalDataComponents/TotalCalorieProvider';
 import { AuthProvider } from './components/GlobalDataComponents/AuthProvider.jsx';
 
 const Stack = createNativeStackNavigator();
@@ -28,7 +26,6 @@ export default function App() {
   if(!loaded) return null;
 
   return (
-      // <TrackedFoodsProvider>
         <AuthProvider>
           <NavigationContainer>
             <Stack.Navigator>
@@ -41,20 +38,16 @@ export default function App() {
               <Stack.Screen name="Essentia" component={RootNavigation}
                   options={{ headerShown: false }}
               />
-              <Stack.Screen name="FoodDetails" component={FoodDetails}         
-                options={optionStyle}
+              <Stack.Screen name="Food" component={FoodNavigation}
+                  options={{ headerShown: false }}
               />
-              <Stack.Screen name="FoodSelection" component={FoodSelection}
-                options={optionStyle}
-              />
-              <Stack.Screen name="FoodDescription" component={FoodDescription} 
-                options={optionStyle}
+              <Stack.Screen name="Habit" component={HabitNavigation}
+                options={{ headerShown: false }}
               />
 
             </Stack.Navigator>
           </NavigationContainer>
         </AuthProvider>
-      // </TrackedFoodsProvider>
   );
 
 }

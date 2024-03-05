@@ -5,7 +5,7 @@ const TrackedFoodsContext = createContext();
 import { AuthContent } from '../../components/GlobalDataComponents/AuthProvider';
 
 export const TrackedFoodsProvider = ({ children }) => {
-    const { userData } = useContext(AuthContent);
+    const { userData, localIP } = useContext(AuthContent);
 
     const [trackedFoods, setTrackedFoods] = useState([]);
     const [totalCalorie, setTotalCalorie] = useState(0);
@@ -54,7 +54,7 @@ export const TrackedFoodsProvider = ({ children }) => {
 
     const fetchTrackedFoods = async (userId) => {
         try {
-            const response = await axios.post("http://192.168.222.188:8000/trackedFoods", { userId });
+            const response = await axios.post(`http://${localIP}:8000/trackedFoods`, { userId });
             setTrackedFoods(response.data);
         } catch (e) {
             console.log(e);

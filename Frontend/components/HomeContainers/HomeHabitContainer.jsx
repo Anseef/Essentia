@@ -2,11 +2,12 @@ import { CheckBox,View, Text, Pressable, StyleSheet } from 'react-native'
 import React from 'react'
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import IconPack from 'react-native-vector-icons/FontAwesome5';
+import { useNavigation } from '@react-navigation/native';
 
 const HomeHabitContainer = () => {
-
+  const navigation = useNavigation();
   return (
-    <Pressable android_ripple={{ color: 'rgba(0, 0, 0, 0.1)', borderless: false }} style = { styles.container}  onPress={() => console.log("Habit Clicked")}>
+    <Pressable android_ripple={{ color: 'rgba(0, 0, 0, 0.1)', borderless: false }} style = { styles.container} onPress={() => navigation.navigate('Habit', { screen: 'HabitMain'})}>
       <View style = { styles.headingBlock }>
         <Text style = {{ fontFamily: 'SemiBold', fontSize: 20 }}>Habits</Text>
         <IconPack name='guitar' size={ 20 } style = {{ paddingBottom: 5 }} color={ '#7d5ada'}/> 

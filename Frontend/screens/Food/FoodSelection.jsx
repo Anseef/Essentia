@@ -16,13 +16,13 @@ const FoodSelection = () => {
     const [filteredTrackedFoods, setFilteredTrackedFoods] = useState([]);
     const [todayDate,setTodayDate] = useState(new Date())
     
-    const { userData } = useContext(AuthContent);
+    const { userData, localIP } = useContext(AuthContent);
     const userId = userData._id;
 
     //fetch tracked foods from DB
     const fetchTrackedFoods = async () => {
         try {
-            const response = await axios.post("http://192.168.222.188:8000/trackedFoods", { userId });
+            const response = await axios.post(`http://${localIP}:8000/trackedFoods`, { userId });
             setTrackedItems(response.data);
             
         } catch (e) {

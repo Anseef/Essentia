@@ -16,7 +16,7 @@ const FoodDescription = ({ route }) => {
     const navigation = useNavigation();
 
     //Fetching userData from AuthProvider
-    const { userData } = useContext(AuthContent);
+    const { userData, localIP } = useContext(AuthContent);
 
     const [measure, setMeasure] = useState('1');
     const [ quantity, setQuantity ] = useState(1)
@@ -109,7 +109,7 @@ const FoodDescription = ({ route }) => {
             userId: userData._id,
         };
 
-        await axios.post("http://192.168.222.188:8000/tracked", { foodItem: updatedFoodItem })
+        await axios.post(`http://${localIP}:8000/tracked`, { foodItem: updatedFoodItem })
             .then((response) => {
                 console.log(response.data);
                 if (response.data) {
@@ -131,7 +131,7 @@ const FoodDescription = ({ route }) => {
             userId: userData._id
         };
 
-        await axios.put(`http://192.168.222.188:8000/update/${foodItem._id}`, { foodItem: updatedFoodItem })
+        await axios.put(`http://${localIP}:8000/update/${foodItem._id}`, { foodItem: updatedFoodItem })
             .then((response) => {
                 console.log(response.data);
                 if (response.data) {

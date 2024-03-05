@@ -11,7 +11,7 @@ import { LinearGradient } from "expo-linear-gradient";
 
 const Login = () => {
 
-  const { setUserToken, setIsLoggedIn } = useContext(AuthContent);
+  const { setUserToken, setIsLoggedIn, localIP } = useContext(AuthContent);
 
   const navigation = useNavigation();
   const [email, setEmail] = useState('');
@@ -43,7 +43,7 @@ const Login = () => {
 
     try {
       const response = await axios.post(
-        "http://192.168.222.188:8888/login-user",
+        `http://${localIP}:8888/login-user`,
         userLoginData
       );
 

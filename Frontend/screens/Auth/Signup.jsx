@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { View, Text, TextInput, StyleSheet, Pressable, StatusBar } from 'react-native';
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
@@ -6,9 +6,11 @@ import FontAwesomeIcons from 'react-native-vector-icons/FontAwesome'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import { LinearGradient } from "expo-linear-gradient";
+import { AuthContent } from '../../components/GlobalDataComponents/AuthProvider';
 
 const Signup = () => {
   const navigation = useNavigation();
+  const { localIP } = useContext(AuthContent);
 
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
@@ -74,7 +76,7 @@ const Signup = () => {
     
     if(error === '') {
       try {
-        const response = await axios.post("http://192.168.222.188:8888/register", userData);
+        const response = await axios.post(`http://${localIP}:8888/register`, userData);
     
         if (response.data.status === 'ok') {
           navigation.navigate("Login");

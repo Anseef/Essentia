@@ -13,7 +13,7 @@ const HomeFoodContainer = () => {
   const { totalCalorie } = useTrackedFoods();
   
   return (
-    <Pressable android_ripple={{ color: 'rgba(0, 0, 0, 0.1)', borderless: false }} style = { styles.container}  onPress={() => navigation.navigate('FoodSelection')}>
+    <Pressable android_ripple={{ color: 'rgba(0, 0, 0, 0.1)', borderless: false }} style = { styles.container}  onPress={() => navigation.navigate('Food', { screen: 'FoodSelection' })}>
       <View style = { styles.headingBlock }>
         <Text style = {{ fontFamily: 'SemiBold', fontSize: 20 }}>Food</Text>
         <IconPack name = 'coffee' size={ 20 } color={ '#7d5ada'}/>

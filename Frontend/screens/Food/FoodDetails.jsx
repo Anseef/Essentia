@@ -23,7 +23,7 @@ const FoodDetails = ({ route }) => {
     const [filteredTrackedFoods, setFilteredTrackedFoods] = useState([]);
     const [totalCalorie, setTotalCalorie] = useState(0);
 
-    const { userData } = useContext(AuthContent);
+    const { userData, localIP } = useContext(AuthContent);
     const userId = userData?._id;
 
     const navigation = useNavigation();
@@ -32,7 +32,7 @@ const FoodDetails = ({ route }) => {
     
     const fetchData = async () => {
         try {
-            const response = await axios.post("http://192.168.222.188:8000/data", { food });
+            const response = await axios.post(`http://${localIP}:8000/data`, { food });
             setDataSet(response.data);
         } catch (e) {
             console.log(e);
@@ -42,7 +42,7 @@ const FoodDetails = ({ route }) => {
     const fetchTrackedFoods = async () => {
         if(userId) {
             try {
-                const response = await axios.post("http://192.168.222.188:8000/trackedFoods", { userId });
+                const response = await axios.post(`http://${localIP}:8000/trackedFoods`, { userId });
                 setTrackedFoods(response.data);
             } catch (e) {
                 console.log(e);
@@ -77,7 +77,7 @@ const FoodDetails = ({ route }) => {
 
     const handleRemoveFoodItem = async (itemToRemove) => {
         try {
-            await axios.delete(`http://192.168.222.188:8000/tracked/${itemToRemove._id}`);
+            await axios.delete(`http://${localIP}:8000/tracked/${itemToRemove._id}`);
 
             const updatedFilteredFoods = filteredTrackedFoods.filter((item) => item.foodItem._id !== itemToRemove._id);
             setFilteredTrackedFoods(updatedFilteredFoods);
