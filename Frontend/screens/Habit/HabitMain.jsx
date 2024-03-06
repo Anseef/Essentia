@@ -4,12 +4,11 @@ import HabitBlock from '../../components/HabitComponents/HabitBlock'
 import Calender from '../../components/CalenderBlock/Calender'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import FontAwesomeIcons from 'react-native-vector-icons/FontAwesome6'
-import { useNavigation } from '@react-navigation/native';
 import { ScrollView } from 'react-native'
 import * as Progress from 'react-native-progress'
+import { useNavigation } from '@react-navigation/native';
 
 const HabitMain = () => {
-
   const navigation = useNavigation();
   const [todayDate, setTodayDate] = useState(new Date());
 
@@ -45,10 +44,11 @@ const HabitMain = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-
+      <StatusBar backgroundColor={ '#836cdf' } />
       <View style={styles.upperContainer}>
 
-        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 15 }}>
+      {/* 
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
 
           <Pressable onPress={() => navigation.goBack()} style={{ marginLeft: -15, marginTop: 10 }}>
             <Ionicons name='chevron-back-outline' size={30} />
@@ -57,9 +57,29 @@ const HabitMain = () => {
             Habits
           </Text>
 
+        </View> 
+      */}
+
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between',marginTop: 20 }}>
+          <Pressable onPress={() => handleBackPress()}>
+            <Text style={styles.dateBar}>
+              <Ionicons name='chevron-back' size={20} />
+            </Text>
+          </Pressable>
+
+          <Text style={styles.dateBar}>
+            <Text>
+              {new Date(todayDate).toLocaleDateString('en-US', { day: 'numeric', month: 'long' }).toUpperCase()}
+            </Text>
+          </Text>
+
+          <Pressable onPress={() => handleForwardPress()}>
+            <Text style={styles.dateBar}>
+              <Ionicons name='chevron-forward' size={20} />
+            </Text>
+          </Pressable>
         </View>
 
-        <Text style={{ fontFamily: 'Medium', marginBottom: -12, color: 'grey' }}>Today, 5 Mar 2024</Text>
         <Calender />
 
         <View style={{ marginTop: 25, gap: 10, paddingTop: 10 }}>
@@ -86,27 +106,7 @@ const HabitMain = () => {
       </View>
 
       <View style={styles.taskContainer}>
-        <Text style={{ fontFamily: 'Bold', fontSize: 22, paddingBottom: 10, paddingTop: 20, paddingLeft: 5 }}>Checklist</Text>
-
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          <Pressable onPress={() => handleBackPress()}>
-            <Text style={styles.dateBar}>
-              <Ionicons name='chevron-back' size={20} />
-            </Text>
-          </Pressable>
-
-          <Text style={styles.dateBar}>
-            <Text>
-              {new Date(todayDate).toLocaleDateString('en-US', { day: 'numeric', month: 'long' }).toUpperCase()}
-            </Text>
-          </Text>
-
-          <Pressable onPress={() => handleForwardPress()}>
-            <Text style={styles.dateBar}>
-              <Ionicons name='chevron-forward' size={20} />
-            </Text>
-          </Pressable>
-        </View>
+        <Text style={{ fontFamily: 'Bold', fontSize: 22, paddingTop: 20, paddingLeft: 5 }}>Checklist</Text>
 
         <ScrollView style={{ marginTop: 15 }} showsVerticalScrollIndicator={false}>
           <HabitBlock />
@@ -116,7 +116,7 @@ const HabitMain = () => {
           <HabitBlock />
         </ScrollView>
 
-        <Pressable style={styles.addButton} onPress={ ()=> console.log("New Task")}>
+        <Pressable style={styles.addButton} onPress={()=>navigation.navigate('Select a Category')}>
             <FontAwesomeIcons name='plus' size={20} color={ '#fff' } />
         </Pressable>
 
@@ -133,21 +133,21 @@ const styles = StyleSheet.create({
   upperContainer: {
     paddingLeft: 20,
     paddingRight: 20,
-    height: 300
   },
   taskContainer: {
     flex: 1,
+    marginTop: 25,
     backgroundColor: '#f3f2fc',
     paddingLeft: 20,
     paddingRight: 20,
     borderTopLeftRadius: 40,
     borderTopRightRadius: 40
   },
-  dateText: {
-    paddingTop: 15,
-    fontFamily: 'Bold',
-    fontSize: 24
-  },
+  // dateText: {
+  //   paddingTop: 15,
+  //   fontFamily: 'Bold',
+  //   fontSize: 24
+  // },
   dateBar: {
     fontFamily: 'SemiBold',
   },

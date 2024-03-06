@@ -1,11 +1,15 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import React, { useState } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Entypo from 'react-native-vector-icons/Entypo';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import Checkbox from 'expo-checkbox';
+import { useNavigation } from '@react-navigation/native';
 
 const HabitBlock = () => {
+
+  const navigation = useNavigation();
+
   const [isChecked, setChecked] = useState(false);
 
   const containerStyle = {
@@ -23,7 +27,7 @@ const HabitBlock = () => {
     fontFamily: 'Regular',
     fontSize: 12,
     paddingTop: 3,
-    color: isChecked ? '#4CAF50' : '#836cdf', // Green if done, another color if incomplete
+    color: isChecked ? '#4CAF50' : '#836cdf',
   };
 
   const iconContainerStyle = {
@@ -38,7 +42,7 @@ const HabitBlock = () => {
   }
 
   return (
-    <View style={containerStyle}>
+    <Pressable android_ripple={{ color: 'rgba(0, 0, 0, 0.1)', borderless: false }} style={containerStyle} onPress={()=>console.log("Task Clicked")}>
       <View style={{flexDirection: 'row',gap: 15, alignItems: 'center'}}>
         <View style={iconContainerStyle}>
           <Icon name='walking' size={22} />
@@ -64,7 +68,7 @@ const HabitBlock = () => {
           color={isChecked ? '#9e8de0' : '#836cdf'}
         />
       </View>
-    </View>
+    </Pressable>
   );
 };
 
