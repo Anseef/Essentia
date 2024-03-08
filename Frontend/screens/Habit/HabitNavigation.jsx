@@ -3,6 +3,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import HabitMain from './HabitMain';
 import Category from './Category';
+import CreateHabit from './CreateHabit';
 
 const Stack = createNativeStackNavigator();
 
@@ -13,7 +14,12 @@ const HabitNavigation = () => {
       <Stack.Screen name="Habits" component={HabitMain}         
           options={optionStyle}
       />
+
       <Stack.Screen name="Select a Category" component={Category}         
+          options={optionStyle}
+      />
+
+      <Stack.Screen name="Create Habit" component={CreateHabit}
           options={optionStyle}
       />
     </Stack.Navigator>

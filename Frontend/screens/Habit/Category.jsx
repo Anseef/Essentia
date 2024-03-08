@@ -1,17 +1,35 @@
 import { View, StyleSheet, Pressable,Text } from 'react-native'
 import React, { useState } from 'react'
 import CategoryBlock from '../../components/HabitComponents/CategoryBlock'
+import { useNavigation } from '@react-navigation/native';
+import CategorySelectPopup from '../../components/HabitComponents/CategorySelectPopup';
 
 const Category = () => {
 
-    const [selectedCategory, setSelectedCategory] = useState([]);
+    const navigation = useNavigation();
+
+    const [selectedCategory, setSelectedCategory] = useState('');
+    const [isPopupVisible, setPopupVisible] = useState(false);
+
+
+    const openPopup = () => {
+        setPopupVisible(true);
+    };
+
+    const closePopup = () => {
+        setPopupVisible(false);
+    };
+
+    const navigateToCreateHabit = () => {
+        if (selectedCategory) {
+        navigation.navigate('Create Habit', { selectedCategory });
+        }
+    };
 
     const handleCategorySelect = (category) => {
         setSelectedCategory(category);
     };
     
-    console.log(selectedCategory)
-
     return (
         <View style={ styles.container }> 
             <View style={ styles.categoryContainer }>
@@ -80,13 +98,22 @@ const Category = () => {
             </View>
             <View style = {{ width: '100%', flexDirection: 'row', justifyContent: 'space-around' }}>
 
-                <Pressable style = {[styles.buttonStyle, { borderColor: '#836cdd' }]}>
+                <Pressable style = {[styles.buttonStyle, { borderColor: '#836cdd' }]} onPress={ () => navigation.goBack() }>
                     <Text style={[styles.buttonText, {color: '#836cdd'}]}>Cancel</Text>
                 </Pressable>
                     
-                <Pressable style = {[styles.buttonStyle, {backgroundColor: '#836cdd', borderColor: '#836cdd'}]}>
-                    <Text style={[styles.buttonText, {color: '#fff'}]}>Next</Text>
+                <Pressable
+                    style={[styles.buttonStyle, { backgroundColor: '#836cdd', borderColor: '#836cdd' }]}
+                    onPress={() => { selectedCategory === '' ? openPopup() : navigateToCreateHabit() }}
+                >
+                    <Text style={[styles.buttonText, { color: '#fff' }]}>Next</Text>
                 </Pressable>
+
+                <CategorySelectPopup
+                    isVisible={isPopupVisible}
+                    onClose={closePopup}
+                    onSelectCategory={handleCategorySelect}
+                />
 
             </View>
         </View>

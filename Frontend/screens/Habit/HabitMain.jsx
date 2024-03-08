@@ -116,9 +116,11 @@ const HabitMain = () => {
           <HabitBlock />
         </ScrollView>
 
-        <Pressable style={styles.addButton} onPress={()=>navigation.navigate('Select a Category')}>
-            <FontAwesomeIcons name='plus' size={20} color={ '#fff' } />
+        <Pressable style={styles.addButton} onPress={() => navigation.navigate('Select a Category')}>
+          <FontAwesomeIcons name='plus' size={20} color='#fff' />
         </Pressable>
+
+
 
       </View>
     </SafeAreaView>
