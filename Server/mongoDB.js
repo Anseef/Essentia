@@ -6,6 +6,7 @@ const foodCollection = 'foodDetails'
 const sFoodsCollection = 'storedFoods'
 const usersCollection = 'users'
 const storedHabits = 'storedHabits'
+const completedTask = 'completedTasks'
 
 const client = new MongoClient(uri);//DB Connection
 client.connect()
@@ -17,5 +18,6 @@ const foodDetailsCollection = database.collection(foodCollection);
 const storedFoodCollection = database.collection(sFoodsCollection);
 const userDetailsCollection = database.collection(usersCollection);
 const storedHabitsCollection = database.collection(storedHabits);
+const completedTasksCollection = database.collection(completedTask);
 
-module.exports = { foodDetailsCollection, storedFoodCollection, userDetailsCollection, storedHabitsCollection }
+module.exports = { foodDetailsCollection, storedFoodCollection, userDetailsCollection, storedHabitsCollection, completedTasksCollection }

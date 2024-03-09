@@ -6,12 +6,17 @@ import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import Checkbox from 'expo-checkbox';
 import { useNavigation } from '@react-navigation/native';
 
-const HabitBlock = () => {
+const HabitBlock = ({ habitData, onCheckedStatusChange, isCheckedStatus }) => {
 
   const navigation = useNavigation();
 
-  const [isChecked, setChecked] = useState(false);
+  const [isChecked, setChecked] = useState(isCheckedStatus);
+  const { title, category } = habitData;
 
+  const handleCheckboxChange = () => {
+    onCheckedStatusChange(habitData)
+  };
+  
   const containerStyle = {
     ...styles.container,
     backgroundColor: isChecked ? '#ecebfa' : '#e0defa',
@@ -49,7 +54,7 @@ const HabitBlock = () => {
         </View>
 
         <View>
-          <Text style={TaskHeadingStyle}>Go for a walk</Text>
+          <Text style={TaskHeadingStyle}>{ title }</Text>
 
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             {incompleteIcon}
@@ -64,7 +69,7 @@ const HabitBlock = () => {
         <Checkbox
           style={styles.CheckboxStyle}
           value={isChecked}
-          onValueChange={setChecked}
+          onValueChange={handleCheckboxChange}
           color={isChecked ? '#9e8de0' : '#836cdf'}
         />
       </View>
@@ -93,8 +98,9 @@ const styles = StyleSheet.create({
   },
   taskHeading: {
     fontFamily: 'SemiBold',
-    fontSize: 16,
-    marginBottom: -3
+    fontSize: 15,
+    marginBottom: -3,
+    marginTop: 5
   },
   CheckboxStyle: {
     padding: 10,
