@@ -1,24 +1,58 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, Pressable } from 'react-native';
-import WeeklyHabitSelector from '../../components/HabitComponents/WeeklyHabitSelector';
+import React, { useState, useContext } from 'react'
+import { StyleSheet, Text, View, TextInput, Pressable } from 'react-native'
+import WeeklyHabitSelector from '../../components/HabitComponents/WeeklyHabitSelector'
 import { SelectList } from 'react-native-dropdown-select-list'
+import axios from 'axios'
+import { AuthContent } from '../../components/GlobalDataComponents/AuthProvider';
+import { useNavigation } from '@react-navigation/native'
 
 const CreateHabit = ({ route }) => {
+
+  const navigation = useNavigation();
+
   const [title, setTitle] = useState('');
   const [category, setCategory] = useState(route.params?.selectedCategory || 'Not Specified');
   const [customCategory, setCustomCategory] = useState('');
-  const [priority, setPriority] = useState('');
+  const [priority, setPriority] = useState(null);
   const [selectedDays, setSelectedDays] = useState([]);
+  const [error, setError] = useState(null);
+
+  const { userData, localIP } = useContext(AuthContent);
 
   const handleSelectDays = (days) => {
     setSelectedDays(days);
   };
+
+  const handleSave = async () => {
+    if (!title || !priority || selectedDays.length === 0) {
+      setError('Please fill all required fields.');
+      return;
+    }
   
-  const handleSave = () => {
     console.log('Title:', title);
-    category === 'Create' ? console.log('Category:', customCategory) : console.log(category);
+    category === 'Create' ? console.log('Category:', customCategory) : console.log('Category:', category);
     console.log('Priority:', priority);
-    console.log(selectedDays)
+    console.log('Repeat Days:', selectedDays);
+  
+    try {
+      const habitData = {
+        userId: userData._id,
+        title: title,
+        category: category === 'Create' ? customCategory : category,
+        priority: priority !== 'none' ? parseInt(priority) : 0,
+        repeatDays: selectedDays,
+      };
+  
+      // Inserting Habit data to the DB 
+      const response = await axios.post(`http://${localIP}:8080/create-habit`, habitData);
+
+      if(response.data.status === 'ok'){
+        navigation.navigate( 'Habits' );
+      }
+
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   return (
@@ -71,6 +105,7 @@ const CreateHabit = ({ route }) => {
                     setSelected={(value) => { setPriority(value) }}
                     data={
                         [
+                            { key: '0', value: 'none' },
                             { key: '1', value: 1 },
                             { key: '2', value: 2 },
                             { key: '3', value: 3 },
@@ -78,36 +113,38 @@ const CreateHabit = ({ route }) => {
                     }
                     search={false}
                     defaultOption={{
-                        key: '1',
-                        value: 1
+                        key: '0',
+                        value: 'none'
                     }}
                     fontFamily='SemiBold'
                     save='value'
                     boxStyles={{
                         position:'absolute',
-                        left: -55,
+                        left: -65,
                         top: -23, 
                         borderWidth: 0, 
                         alignItems: 'center', 
                         justifyContent: 'space-between',
-                        width: 80
+                        width: 90
                     }}
                     inputStyles={{ fontSize: 15 }}
                     dropdownStyles={{ 
                         position:'absolute',
-                        left: -40,
+                        left: -65,
                         top: 30, 
                         borderColor: 'transparent', 
                         backgroundColor: '#e8defa', 
                         borderRadius: 5, 
-                        width: 60, 
-                        alignContent: 'center' 
+                        width: 85, 
+                        alignItems: 'center'
                     }}
 
-                    dropdownTextStyles={{ fontSize: 15 }}
+                    dropdownTextStyles={{ fontSize: 15, textAlign:'center' }}
                 />
             </View>
-            
+
+            {error && <Text style={styles.errorText}>{error}</Text>}
+
         </View>
 
         <Pressable
@@ -164,4 +201,12 @@ const styles = StyleSheet.create({
     fontFamily: 'Bold',
     fontSize: 16,
   },
+  errorText: {
+    color: 'red',
+    marginTop: 10,
+    fontSize: 14,
+    fontFamily: 'SemiBold',
+    alignSelf: 'center'
+  }
+
 });

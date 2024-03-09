@@ -5,8 +5,9 @@ const dbName = 'essentia'; //Database info
 const foodCollection = 'foodDetails'
 const sFoodsCollection = 'storedFoods'
 const usersCollection = 'users'
+const storedHabits = 'storedHabits'
 
-const client = new MongoClient(uri);//DB connection
+const client = new MongoClient(uri);//DB Connection
 client.connect()
   .then(() => console.log('MongoDB connected successfully!'))
   .catch(err => console.error('Error connecting to MongoDB:', err));
@@ -15,5 +16,6 @@ const database = client.db(dbName);
 const foodDetailsCollection = database.collection(foodCollection);
 const storedFoodCollection = database.collection(sFoodsCollection);
 const userDetailsCollection = database.collection(usersCollection);
+const storedHabitsCollection = database.collection(storedHabits);
 
-module.exports = { foodDetailsCollection, storedFoodCollection, userDetailsCollection }
+module.exports = { foodDetailsCollection, storedFoodCollection, userDetailsCollection, storedHabitsCollection }

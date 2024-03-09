@@ -5,7 +5,7 @@ const AuthContent = createContext({ userToken: null, setUserToken: () => {}, cle
 
 const AuthProvider = ({ children }) => {
 
-  const localIP = '192.168.159.188';
+  const localIP = '192.168.138.188';
 
   const [userToken, setUserToken] = useState(null);
   const [userData, setUserData] = useState(null);
