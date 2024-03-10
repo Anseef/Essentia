@@ -1,5 +1,5 @@
 import { Text, View,StyleSheet,StatusBar,Pressable } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import CalenderBlock from '../../components/CalenderBlock/Calender'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import HomeHabitContainer from '../../components/HomeContainers/HomeHabitContainer';
@@ -11,6 +11,22 @@ import { useNavigation } from '@react-navigation/native';
 
 const Homepage = () =>  {
   const navigation = useNavigation();
+
+  const [todayDate, setTodayDate] = useState(new Date())
+
+  const [currentDayIndex, setCurrentDayIndex] = useState(0);
+  const handleCurrentDay = (currentIndex) => {
+    setCurrentDayIndex(currentIndex)
+  }
+
+  useEffect(() => {
+    const getTodayDate = () => {
+      const today = new Date();
+      const formattedDate = today.toISOString().split('T')[0];
+      setTodayDate(formattedDate)
+    };
+    getTodayDate();
+  }, [])
 
   return (
     <SafeAreaView style = {{ flex: 1, paddingLeft: 20, paddingRight:20,backgroundColor: '#fff'}}>
@@ -33,7 +49,7 @@ const Homepage = () =>  {
       </View>
 
       <View>
-        <CalenderBlock />
+        <CalenderBlock currentDate={ todayDate } selectedDayIndex={handleCurrentDay} />
       </View>
 
       <View>

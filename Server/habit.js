@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const app = express();
+const { ObjectId } = require('mongodb');
 
 app.use(cors());
 app.use(express.json());
@@ -21,7 +22,9 @@ app.post("/create-habit", async (req, res) => {
 app.post("/fetch-habit", async (req, res) => {
     try {
         const userId = req.body.userId;
-        const fetchHabit = await storedHabitsCollection.find({ userId : userId }).toArray();
+        const currentDayIndex = req.body.currentDayIndex
+        
+        const fetchHabit = await storedHabitsCollection.find({ userId : userId, repeatDays: currentDayIndex }).toArray();
         res.json({ status: 'ok', data: fetchHabit });
       } catch (error) {
         res.status(500).json({ error: "Internal Server Error" });
@@ -60,7 +63,28 @@ app.post("/fetch-completed", async (req, res) => {
       }      
 });
 
+app.post("/remove-completed", async (req, res) => {
+    try {
 
+        const completedTask = req.body.completedTask;
+        const filter = {
+            date: completedTask.date,
+            _id: new ObjectId(completedTask.habitId)
+        };
+               
+        
+        const removeHabit = await completedTasksCollection.deleteOne(filter);
+
+        if (removeHabit.deletedCount > 0) {
+            res.json({ status: 'ok', data: 'Removed Data' });
+        } else {
+            res.json({ status: 'not found', data: 'No matching document found to remove' });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+});
 
 console.log("Habit")
 app.listen(8080, ()=> {

@@ -1,18 +1,36 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-const Calendar = () => {
+const Calendar = ({ currentDate, selectedDayIndex }) => {
   const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
+  const [currentDayIndex, setCurrentDayIndex] = useState(null);
+
+  useEffect(() => {
+    const date = new Date(currentDate);
+    const dayIndex = date.getDay();
+    setCurrentDayIndex(dayIndex);
+  }, [currentDate]);
+
+  useEffect(()=>{
+    if(currentDayIndex !== null){
+      selectedDayIndex(currentDayIndex)
+    }
+  },[ currentDayIndex ])
+
   const getCurrentDateForDay = (dayIndex) => {
-    const currentDate = new Date();
-    currentDate.setDate(currentDate.getDate() + dayIndex);
-    return currentDate.toLocaleDateString('en-US', { day: 'numeric' });
+    const date = new Date(currentDate);
+    const currentDay = date.getDay();
+    const difference = currentDay - 0;
+    date.setDate(date.getDate() - difference + dayIndex);
+    
+    return date.toLocaleDateString('en-US', { day: 'numeric' });
   };
+  
 
   const isToday = (dayIndex) => {
-    const currentDate = new Date();
-    const day = currentDate.getDay();
+    const date = new Date(currentDate);
+    const day = date.getDay();
     return dayIndex === day;
   };
 

@@ -6,7 +6,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import FontAwesomeIcons from 'react-native-vector-icons/FontAwesome6'
 import { ScrollView } from 'react-native'
 import * as Progress from 'react-native-progress'
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import { AuthContent } from '../../components/GlobalDataComponents/AuthProvider';
 
@@ -16,6 +16,7 @@ const HabitMain = () => {
   const [habitData, setHabitData] = useState([]);
   const [completedHabits, setCompletedHabits] = useState([]);
   const [activeHabits, setActiveHabits] = useState([]);
+  const [currentDayIndex, setCurrentDayIndex] = useState(0);
 
   const { userData, localIP } = useContext(AuthContent);
 
@@ -29,18 +30,30 @@ const HabitMain = () => {
     fetcHabitData();
   }, [])
 
+  useEffect(() => {
+    fetcHabitData();
+  }, [currentDayIndex])
+
+  useFocusEffect(
+    React.useCallback(() => {
+      fetcHabitData();
+    }, [todayDate])
+  );
+
   //Fetch date based on the click
 
   const handleBackPress = () => {
     const [year, month, day] = todayDate.split('-').map(Number);
     const previousDate = new Date(year, month - 1, day - 1);
     setTodayDate(formatDate(previousDate));
+    // setSelectedDayIndex(dayIndex-1);
   };
 
   const handleForwardPress = () => {
     const [year, month, day] = todayDate.split('-').map(Number);
     const nextDate = new Date(year, month - 1, day + 1);
     setTodayDate(formatDate(nextDate));
+    // setSelectedDayIndex(dayIndex+1);
   };
 
   const formatDate = (date) => {
@@ -54,7 +67,7 @@ const HabitMain = () => {
 
   const fetcHabitData = async() => {
     try {
-      const response = await axios.post(`http://${localIP}:8080/fetch-habit`, { userId: userData._id });
+      const response = await axios.post(`http://${localIP}:8080/fetch-habit`, { userId: userData._id, currentDayIndex });
 
       if(response.data.status === 'ok'){
         const sortedHabitData = response.data.data
@@ -114,6 +127,40 @@ const HabitMain = () => {
     }
   };
 
+  const removeCompletedfromList = async (habitData) => {
+    const completedTask = {
+      habitId: habitData._id,
+      title: habitData.title,
+      userId: habitData.userId,
+      date: todayDate,
+    };
+  
+    try {
+      // Make a request to remove the completed task
+      const responseRemoveCompleted = await axios.post(
+        `http://${localIP}:8080/remove-completed`,
+        { completedTask }
+      );
+  
+      if (responseRemoveCompleted.data.status === 'ok') {
+        console.log(responseRemoveCompleted.data.data)
+
+        const responseFetchCompleted = await axios.post(
+          `http://${localIP}:8080/fetch-completed`,
+          { userData: { userId: userData._id, date: todayDate } }
+        );
+  
+        if (responseFetchCompleted.data.status === 'ok') {
+          setCompletedHabits(responseFetchCompleted.data.data);
+          fetchListItems();
+        }
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  
+
   const progressBarProgress = completedHabits.length  / (completedHabits.length + habitData.length) || 0
 
   
@@ -134,6 +181,11 @@ const HabitMain = () => {
   useEffect(() => {
       fetchListItems()
   }, [completedHabits])
+
+  //Fetching current day index from Calender.jsx
+  const handleCurrentDayChange = (currentIndex) => {
+    setCurrentDayIndex(currentIndex)
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -173,7 +225,7 @@ const HabitMain = () => {
           </Pressable>
         </View>
 
-        <Calender />
+        <Calender currentDate={todayDate} selectedDayIndex={handleCurrentDayChange}/>
 
         <View style={{ marginTop: 25, gap: 10, paddingTop: 10 }}>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -231,7 +283,7 @@ const HabitMain = () => {
                 <HabitBlock 
                   key={index} 
                   habitData={habit} 
-                  onCheckedStatusChange={handleCheckedStatusChange}
+                  onCheckedStatusChange={removeCompletedfromList}
                   isCheckedStatus={true}
                 />
               ))}
