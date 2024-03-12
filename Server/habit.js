@@ -23,6 +23,7 @@ app.post("/fetch-habit", async (req, res) => {
     try {
         const userId = req.body.userId;
         const currentDayIndex = req.body.currentDayIndex
+        console.log(currentDayIndex)
         
         const fetchHabit = await storedHabitsCollection.find({ userId : userId, repeatDays: currentDayIndex }).toArray();
         res.json({ status: 'ok', data: fetchHabit });
@@ -69,7 +70,7 @@ app.post("/remove-completed", async (req, res) => {
         const completedTask = req.body.completedTask;
         const filter = {
             date: completedTask.date,
-            _id: new ObjectId(completedTask.habitId)
+            habitId: completedTask.habitId
         };
                
         
@@ -77,6 +78,30 @@ app.post("/remove-completed", async (req, res) => {
 
         if (removeHabit.deletedCount > 0) {
             res.json({ status: 'ok', data: 'Removed Data' });
+        } else {
+            res.json({ status: 'not found', data: 'No matching document found to remove' });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+});
+
+app.post("/delete-habit", async (req, res) => {
+    try {
+
+        const habitData = req.body.habitData;
+
+        const filter = {
+            _id: habitData?.habitId ? new ObjectId(habitData.habitId) : new ObjectId(habitData._id),
+            userId: habitData.userId,
+        };
+               
+        
+        const deleteHabit = await storedHabitsCollection.deleteOne(filter);
+
+        if (deleteHabit.deletedCount > 0) {
+            res.json({ status: 'ok', data: 'Removed Habit' });
         } else {
             res.json({ status: 'not found', data: 'No matching document found to remove' });
         }

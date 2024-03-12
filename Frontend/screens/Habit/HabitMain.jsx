@@ -27,7 +27,7 @@ const HabitMain = () => {
       setTodayDate(formattedDate);
     };
     getTodayDate();
-    fetcHabitData();
+    handleCurrentDayChange();
   }, [])
 
   useEffect(() => {
@@ -37,7 +37,7 @@ const HabitMain = () => {
   useFocusEffect(
     React.useCallback(() => {
       fetcHabitData();
-    }, [todayDate])
+    }, [])
   );
 
   //Fetch date based on the click
@@ -46,14 +46,12 @@ const HabitMain = () => {
     const [year, month, day] = todayDate.split('-').map(Number);
     const previousDate = new Date(year, month - 1, day - 1);
     setTodayDate(formatDate(previousDate));
-    // setSelectedDayIndex(dayIndex-1);
   };
 
   const handleForwardPress = () => {
     const [year, month, day] = todayDate.split('-').map(Number);
     const nextDate = new Date(year, month - 1, day + 1);
     setTodayDate(formatDate(nextDate));
-    // setSelectedDayIndex(dayIndex+1);
   };
 
   const formatDate = (date) => {
@@ -108,11 +106,12 @@ const HabitMain = () => {
   const handleCheckedStatusChange = async(habitData) => {
 
     const completedTask = {
+      ...habitData,
       habitId: habitData._id,
-      title: habitData.title,
-      userId: habitData.userId,
-      date: todayDate
-    }
+      date: todayDate,
+      _id: undefined
+    };
+    
 
     try {
       const response = await axios.post(`http://${localIP}:8080/insert-completed`, { completedTask });
@@ -129,9 +128,7 @@ const HabitMain = () => {
 
   const removeCompletedfromList = async (habitData) => {
     const completedTask = {
-      habitId: habitData._id,
-      title: habitData.title,
-      userId: habitData.userId,
+      ...habitData,
       date: todayDate,
     };
   
@@ -267,6 +264,7 @@ const HabitMain = () => {
                     habitData={ habit }
                     onCheckedStatusChange={handleCheckedStatusChange}
                     isCheckedStatus={false}
+                    onPress={(habitData)=> navigation.navigate('Create Habit', { habitData, isEditable: true, selectedCategory: habitData.category })}
                   />
                 );
               })}
@@ -285,6 +283,7 @@ const HabitMain = () => {
                   habitData={habit} 
                   onCheckedStatusChange={removeCompletedfromList}
                   isCheckedStatus={true}
+                  onPress={(habitData)=> navigation.navigate('Create Habit', { habitData, isEditable: false, selectedCategory: habitData.category })}
                 />
               ))}
             </ScrollView>
@@ -339,4 +338,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default HabitMain
+export default HabitMain;

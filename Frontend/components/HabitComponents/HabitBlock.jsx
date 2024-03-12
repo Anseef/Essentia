@@ -6,7 +6,7 @@ import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import Checkbox from 'expo-checkbox';
 import { useNavigation } from '@react-navigation/native';
 
-const HabitBlock = ({ habitData, onCheckedStatusChange, isCheckedStatus }) => {
+const HabitBlock = ({ habitData, onCheckedStatusChange, isCheckedStatus, onPress }) => {
 
   const navigation = useNavigation();
 
@@ -16,6 +16,10 @@ const HabitBlock = ({ habitData, onCheckedStatusChange, isCheckedStatus }) => {
   const handleCheckboxChange = () => {
     onCheckedStatusChange(habitData)
   };
+
+  const handlePress = () => {
+    onPress(habitData);
+  }
   
   const containerStyle = {
     ...styles.container,
@@ -47,7 +51,7 @@ const HabitBlock = ({ habitData, onCheckedStatusChange, isCheckedStatus }) => {
   }
 
   return (
-    <Pressable android_ripple={{ color: 'rgba(0, 0, 0, 0.1)', borderless: false }} style={containerStyle} onPress={()=>console.log("Task Clicked")}>
+    <Pressable android_ripple={{ color: 'rgba(0, 0, 0, 0.1)', borderless: false }} style={containerStyle} onPress={ handlePress }>
       <View style={{flexDirection: 'row',gap: 15, alignItems: 'center'}}>
         <View style={iconContainerStyle}>
           <Icon name='walking' size={22} />

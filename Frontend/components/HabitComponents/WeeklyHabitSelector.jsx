@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, ScrollView, Pressable } from 'react-native';
 
-const WeeklyHabitSelector = ({ onSelectDays }) => {
+const WeeklyHabitSelector = ({ onSelectDays, storedSelectedDays }) => {
   const daysOfWeek = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
-  const [selectedDays, setSelectedDays] = useState([...Array(daysOfWeek.length).keys()]);
+  const [selectedDays, setSelectedDays] = useState(
+    storedSelectedDays !== null ? storedSelectedDays : [...Array(daysOfWeek.length).keys()]
+  );
 
   const toggleDaySelection = (index) => {
     if (selectedDays.includes(index)) {

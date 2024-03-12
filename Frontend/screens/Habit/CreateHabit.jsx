@@ -5,17 +5,35 @@ import { SelectList } from 'react-native-dropdown-select-list'
 import axios from 'axios'
 import { AuthContent } from '../../components/GlobalDataComponents/AuthProvider';
 import { useNavigation } from '@react-navigation/native'
+import Icon from 'react-native-vector-icons/FontAwesome6'
 
 const CreateHabit = ({ route }) => {
 
   const navigation = useNavigation();
 
-  const [title, setTitle] = useState('');
-  const [category, setCategory] = useState(route.params?.selectedCategory || 'Not Specified');
+  let initialTitle = '';
+  if (route.params?.habitData) {
+    initialTitle = route.params.habitData.title || '';
+  }
+
+  let initialPriority = null;
+  if (route.params?.habitData) {
+    initialPriority = route.params.habitData.priority || null;
+  }
+
+  let initialRepeatArray = [0, 1, 2, 3, 4, 5, 6];
+  if (route.params?.habitData) {
+    initialRepeatArray = route.params.habitData.repeatDays || [];
+  }
+
+  const [title, setTitle] = useState(initialTitle);
   const [customCategory, setCustomCategory] = useState('');
-  const [priority, setPriority] = useState(null);
-  const [selectedDays, setSelectedDays] = useState([]);
+  const [priority, setPriority] = useState(initialPriority);
+  const [selectedDays, setSelectedDays] = useState(initialRepeatArray);
   const [error, setError] = useState(null);
+  
+  const category = useState(route.params?.selectedCategory || 'Not Specified');
+  const isEditable = useState(route.params?.isEditable || false);
 
   const { userData, localIP } = useContext(AuthContent);
 
@@ -55,10 +73,33 @@ const CreateHabit = ({ route }) => {
     }
   };
 
+  const handleDeletehabit = async() => {
+    try {
+      const response = await axios.post(`http://${localIP}:8080/delete-habit`, { habitData: route.params?.habitData });
+
+      if(response.data.status === 'ok'){
+        navigation.navigate( 'Habits' );
+      }
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   return (
     <View style={styles.container}>
         <View style={{ position: 'relative' }}>
-            <Text style={{ fontFamily: 'Bold', fontSize: 28,marginBottom: 10}}>Create Habit</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+              <Text style={{ fontFamily: 'Bold', fontSize: 28}}>{ isEditable? 'Update Habit' : 'Create Habit'}</Text>
+              { isEditable[0] ? 
+
+                <Pressable onPress={ handleDeletehabit }>
+                  <Icon name='trash' size={ 20 } color={ '#73549e' } style={{ paddingBottom: 5}}/>
+                </Pressable>
+                : undefined 
+              }
+
+            </View>
             <TextInput
             style={styles.input}
             placeholder="Title"
@@ -85,7 +126,7 @@ const CreateHabit = ({ route }) => {
             <View style={styles.fieldContainer}>
                 <Text style={[styles.habitText, { color: '#5e5a65' }]}>Repeat</Text>
 
-                <WeeklyHabitSelector onSelectDays={ handleSelectDays }/>
+                <WeeklyHabitSelector onSelectDays={ handleSelectDays } storedSelectedDays = { selectedDays }/>
 
             </View>
 
@@ -112,10 +153,7 @@ const CreateHabit = ({ route }) => {
                         ]
                     }
                     search={false}
-                    defaultOption={{
-                        key: '0',
-                        value: 'none'
-                    }}
+                    defaultOption={initialPriority === null ? { key: '0', value: 'none' } : { key: '0', value: initialPriority }}
                     fontFamily='SemiBold'
                     save='value'
                     boxStyles={{
