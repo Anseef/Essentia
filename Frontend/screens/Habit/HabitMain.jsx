@@ -264,7 +264,7 @@ const HabitMain = () => {
                     habitData={ habit }
                     onCheckedStatusChange={handleCheckedStatusChange}
                     isCheckedStatus={false}
-                    onPress={(habitData)=> navigation.navigate('Create Habit', { habitData, isEditable: true, selectedCategory: habitData.category })}
+                    onPress={(habitData)=> navigation.navigate('Create Habit', { habitData, isEditable: true,isRemovable: true, selectedCategory: habitData.category })}
                   />
                 );
               })}
@@ -283,7 +283,7 @@ const HabitMain = () => {
                   habitData={habit} 
                   onCheckedStatusChange={removeCompletedfromList}
                   isCheckedStatus={true}
-                  onPress={(habitData)=> navigation.navigate('Create Habit', { habitData, isEditable: false, selectedCategory: habitData.category })}
+                  onPress={(habitData)=> navigation.navigate('Create Habit', { habitData, isEditable: true, isRemovable: false, selectedCategory: habitData.category })}
                 />
               ))}
             </ScrollView>

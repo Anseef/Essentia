@@ -111,6 +111,20 @@ app.post("/delete-habit", async (req, res) => {
     }
 });
 
+app.post("/update-habit", async (req, res) => {
+    const habitData = req.body;
+    console.log(habitData);
+
+    try {
+        const habitId = habitData.habitId;
+        await storedHabitsCollection.updateOne({ _id: new ObjectId(habitId) }, { $set: habitData });
+        res.send({ status: 'ok', data: 'Data Updated Successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ error: "Internal Server Error" });
+    }
+});
+
 console.log("Habit")
 app.listen(8080, ()=> {
     console.log("Connected to port 8080");

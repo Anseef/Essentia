@@ -26,14 +26,16 @@ const CreateHabit = ({ route }) => {
     initialRepeatArray = route.params.habitData.repeatDays || [];
   }
 
+  const habitId = route.params?.habitData?._id || 0;
   const [title, setTitle] = useState(initialTitle);
   const [customCategory, setCustomCategory] = useState('');
   const [priority, setPriority] = useState(initialPriority);
   const [selectedDays, setSelectedDays] = useState(initialRepeatArray);
   const [error, setError] = useState(null);
   
-  const category = useState(route.params?.selectedCategory || 'Not Specified');
+  const category = route.params?.selectedCategory || 'Not Specified';
   const isEditable = useState(route.params?.isEditable || false);
+  const isRemovable = useState(route.params?.isRemovable || false);
 
   const { userData, localIP } = useContext(AuthContent);
 
@@ -47,11 +49,6 @@ const CreateHabit = ({ route }) => {
       return;
     }
   
-    console.log('Title:', title);
-    category === 'Create' ? console.log('Category:', customCategory) : console.log('Category:', category);
-    console.log('Priority:', priority);
-    console.log('Repeat Days:', selectedDays);
-  
     try {
       const habitData = {
         userId: userData._id,
@@ -63,6 +60,34 @@ const CreateHabit = ({ route }) => {
   
       // Inserting Habit data to the DB 
       const response = await axios.post(`http://${localIP}:8080/create-habit`, habitData);
+
+      if(response.data.status === 'ok'){
+        navigation.navigate( 'Habits' );
+      }
+
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const handleUpdate = async () => {
+    if (!title || !priority || selectedDays.length === 0) {
+      setError('Please fill all required fields.');
+      return;
+    }
+  
+    try {
+      const habitData = {
+        habitId: habitId,
+        userId: userData._id,
+        title: title,
+        category: category,
+        priority: priority !== 'none' ? parseInt(priority) : 0,
+        repeatDays: selectedDays,
+      };
+  
+      // Inserting Habit data to the DB 
+      const response = await axios.post(`http://${localIP}:8080/update-habit`, habitData);
 
       if(response.data.status === 'ok'){
         navigation.navigate( 'Habits' );
@@ -91,7 +116,7 @@ const CreateHabit = ({ route }) => {
         <View style={{ position: 'relative' }}>
             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
               <Text style={{ fontFamily: 'Bold', fontSize: 28}}>{ isEditable? 'Update Habit' : 'Create Habit'}</Text>
-              { isEditable[0] ? 
+              { isRemovable[0] ? 
 
                 <Pressable onPress={ handleDeletehabit }>
                   <Icon name='trash' size={ 20 } color={ '#73549e' } style={{ paddingBottom: 5}}/>
@@ -101,11 +126,11 @@ const CreateHabit = ({ route }) => {
 
             </View>
             <TextInput
-            style={styles.input}
-            placeholder="Title"
-            autoCapitalize="none"
-            value={title}
-            onChangeText={(text) => setTitle(text)}
+              style={styles.input}
+              placeholder="Title"
+              autoCapitalize="none"
+              value={title}
+              onChangeText={(text) => setTitle(text)}
             />
 
             {category === 'Create' ? (
@@ -185,12 +210,23 @@ const CreateHabit = ({ route }) => {
 
         </View>
 
-        <Pressable
+        { 
+          isEditable[0] ?       
+          <Pressable
+            style={[styles.buttonStyle, { backgroundColor: '#836cdd', borderColor: '#836cdd' }]}
+            onPress={handleUpdate}
+          >
+            <Text style={[styles.buttonText, { color: '#fff' }]}>Update</Text>
+          </Pressable>
+          :
+          <Pressable
             style={[styles.buttonStyle, { backgroundColor: '#836cdd', borderColor: '#836cdd' }]}
             onPress={handleSave}
-        >
+          >
             <Text style={[styles.buttonText, { color: '#fff' }]}>Save</Text>
-        </Pressable>
+          </Pressable>
+        }
+
     </View>
   );
 };
