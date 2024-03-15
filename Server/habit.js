@@ -113,7 +113,6 @@ app.post("/delete-habit", async (req, res) => {
 
 app.post("/update-habit", async (req, res) => {
     const habitData = req.body;
-    console.log(habitData);
 
     try {
         const habitId = habitData.habitId;
