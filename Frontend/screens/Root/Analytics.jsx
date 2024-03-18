@@ -1,23 +1,32 @@
 import { View, Text, StyleSheet } from 'react-native'
 import { SelectList } from 'react-native-dropdown-select-list'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import FoodAnalytics from './FoodAnalytics'
+import HabitAnalytics from './HabitAnalytics'
 
 const Analytics = () => {
   const [dateRange, setDateRange] = useState('Weekly');
+  const [selectedComponent, setSelectedComponent] = useState('Food');
+  
+  //For initial load
+  useEffect(()=> {
+    setSelectedComponent('Food');
+  },[])
 
-  const handleSeletedDateRange = (range) => {
+  const handleSelectedDateRange = (range) => {
     setDateRange(range);
   }
 
-  console.log(dateRange);
+  const handleSelectedComponent = (value) => {
+    setSelectedComponent(value);
+  }
 
   return (
     <View style={styles.container}>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <Text style={styles.headerStyles}>Analytics</Text>
         <SelectList 
-            setSelected={(value) => { console.log(value) }}
+            setSelected={(value) => { handleSelectedComponent(value) }}
             data={
                 [
                     { key: '0', value: 'Food' },
@@ -45,8 +54,12 @@ const Analytics = () => {
             dropdownTextStyles={{ fontSize: 16, textAlign:'center',fontFamily: 'SemiBold' }}
         />
       </View>
-      <FoodAnalytics onSelectDateRange={ handleSeletedDateRange }/>
-
+      {selectedComponent && selectedComponent === 'Food' ? (
+        <FoodAnalytics onSelectDateRange={handleSelectedDateRange} />
+      ) : selectedComponent === 'Habits' ? (
+        <HabitAnalytics />
+      ) : null
+      }
     </View>
   )
 }

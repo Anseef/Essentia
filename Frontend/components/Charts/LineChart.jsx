@@ -89,7 +89,7 @@ const LineChartBlock = () => {
                 initialSpacing={15}
                 yAxisColor="transparent"
                 xAxisColor="#836cdd"
-                yAxisLabelWidth={ 40 }
+                yAxisLabelWidth={ 30 }
                 xAxisLength={ 300 }
                 rulesLength={ 300 }
                 xAxisLabel={latestData.map((item) => item.label)}

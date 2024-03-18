@@ -12,7 +12,7 @@ const FoodAnalytics = ({ onSelectDateRange }) => {
     }
 
     return (
-        <ScrollView showsVerticalScrollIndicator = {false}>
+        <View>
             <View style={{ paddingTop: 5 }}>
                 <Text style={{ fontSize: 20, fontFamily: 'SemiBold', marginBottom: -10}}>Total Calorie intake</Text>
                 <Text style={{ fontSize: 14, fontFamily: 'Regular', color: 'grey' }}>Last 30 days</Text>
@@ -33,7 +33,7 @@ const FoodAnalytics = ({ onSelectDateRange }) => {
             <View>
                 <LineChartBlock />
             </View>
-        </ScrollView>
+        </View>
     )
 }
 
