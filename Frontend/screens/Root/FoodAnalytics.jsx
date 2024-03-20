@@ -52,30 +52,22 @@ const FoodAnalytics = ({ onSelectDateRange }) => {
         // Find the first and last days of the current month
         const firstDayOfMonth = new Date(currentYear, currentMonth, 1);
         const lastDayOfMonth = new Date(currentYear, currentMonth + 1, 0);
-    
-        // Initialize an array to store weekly calorie consumption
+        
         const weeklyCalories = Array(4).fill(0);
-    
-        // Initialize the start date of each week
+
         let startDateOfWeek = new Date(firstDayOfMonth);
         let endDateOfWeek = new Date(firstDayOfMonth);
-    
-        // Calculate the start and end date of each week
         for (let i = 0; i < 4; i++) {
-            // Set the end date of the week to be 6 days ahead of the start date
             endDateOfWeek.setDate(startDateOfWeek.getDate() + 6);
     
-            // Iterate through foodData to accumulate calories for the current week
             foodData.forEach((foodItem) => {
                 const itemDate = new Date(foodItem.foodItem.date);
     
-                // Check if the item date falls within the current week
                 if (itemDate >= startDateOfWeek && itemDate <= endDateOfWeek) {
                     weeklyCalories[i] += foodItem.foodItem.Calories;
                 }
             });
     
-            // Move to the next week
             startDateOfWeek.setDate(startDateOfWeek.getDate() + 7);
             endDateOfWeek.setDate(endDateOfWeek.getDate() + 7);
         }

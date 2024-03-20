@@ -124,6 +124,35 @@ app.post("/update-habit", async (req, res) => {
     }
 });
 
+app.post('/fetchHabitData', async (req, res) => {
+    const userId = req.body.userId;
+    if(userId) {
+      try {
+        const fetchSelected = await storedHabitsCollection.find({ userId : userId }).toArray();
+        if (fetchSelected) {
+          res.json(fetchSelected);
+        }
+      } catch (e) {
+        res.status(500).json({ error: 'Internal Server Error' });
+      }
+    }
+});
+
+app.post('/fetchCompletedHabits', async (req, res) => {
+    const userId = req.body.userId;
+    if(userId) {
+      try {
+        const fetchSelected = await completedTasksCollection.find({ userId : userId }).toArray();
+        if (fetchSelected) {
+          res.json(fetchSelected);
+        }
+      } catch (e) {
+        res.status(500).json({ error: 'Internal Server Error' });
+      }
+    }
+});
+
+
 console.log("Habit")
 app.listen(8080, ()=> {
     console.log("Connected to port 8080");
