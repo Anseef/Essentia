@@ -1,5 +1,5 @@
 import { Text, View,StyleSheet,StatusBar,Pressable } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import CalenderBlock from '../../components/CalenderBlock/Calender'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import HomeHabitContainer from '../../components/HomeContainers/HomeHabitContainer';
@@ -8,11 +8,14 @@ import HomeHealthContainer from '../../components/HomeContainers/HomeHealthConta
 import HomeFoodContainer from '../../components/HomeContainers/HomeFoodContainer';   
 import IconPack from 'react-native-vector-icons/FontAwesome6';
 import { useNavigation } from '@react-navigation/native';
+import { AuthContent } from '../../components/GlobalDataComponents/AuthProvider';
 
 const Homepage = () =>  {
   const navigation = useNavigation();
 
   const [todayDate, setTodayDate] = useState(new Date())
+
+  const { userData } = useContext(AuthContent);
 
   const [currentDayIndex, setCurrentDayIndex] = useState(0);
   const handleCurrentDay = (currentIndex) => {
@@ -34,7 +37,7 @@ const Homepage = () =>  {
       
       <View style = { styles.headerContainer }>
         <View>
-          <Text style={ styles.headerText }>Hello Yato</Text>
+          <Text style={ styles.headerText }>Hello {userData?.name}</Text>
           <Text style={{ fontFamily: 'Medium',fontSize: 14 }}>Today, {new Date().toLocaleDateString('en-US', {  day: 'numeric',month: 'short', })}</Text>
         </View>
 

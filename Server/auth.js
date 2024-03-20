@@ -3,6 +3,7 @@ const cors = require('cors');
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
+const { ObjectId } = require('mongodb');
 
 const app = express();
 app.use(cors());
@@ -63,6 +64,24 @@ app.post("/user-data", async(req, res) => {
         .then((data) => {
             return res.send({status: 'ok', data: data})
         })
+    }catch(e) {
+        return res.send({error: e});
+    }
+})
+
+app.post("/updateUserData", async(req, res) => {
+    const userData = req.body?.userData;
+    try {
+        const result = await userDetailsCollection.updateOne(
+            { email: userData.email },
+            { $set: userData }
+        );
+
+        if (result.modifiedCount > 0) {
+            return res.status(200).send({ status: 'ok', data: result });
+        } else {
+            return res.status(404).send({ error: 'User data not found or not modified' });
+        }
     }catch(e) {
         return res.send({error: e});
     }

@@ -10,6 +10,7 @@ const AuthProvider = ({ children }) => {
   const [userToken, setUserToken] = useState(null);
   const [userData, setUserData] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isUpdated, setIsUpdated] = useState(false);
 
   const fetchUserData = async () => {
     try {
@@ -35,8 +36,15 @@ const AuthProvider = ({ children }) => {
     initializeAuthProvider();
   }, [isLoggedIn]);
 
+  useEffect(() => {
+    if(isUpdated === true){
+      fetchUserData();
+      setIsUpdated(false);
+    }
+  },[isUpdated])
+
   return (
-    <AuthContent.Provider value={{ setUserToken, userData, clearToken, setIsLoggedIn, localIP }}>
+    <AuthContent.Provider value={{ setUserToken, userData, clearToken, setIsLoggedIn, localIP, setIsUpdated }}>
       {children}
     </AuthContent.Provider>
   );

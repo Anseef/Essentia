@@ -7,7 +7,7 @@ import RootNavigation from './screens/Root/RootNavigation';
 import AuthNavigation from './screens/Auth/AuthNavigation';
 import FoodNavigation from './screens/Food/FoodNavigation.jsx';
 import HabitNavigation from './screens/Habit/HabitNavigation.jsx';
-
+import EditProfile from './screens/Root/EditProfile.jsx';
 import { AuthProvider } from './components/GlobalDataComponents/AuthProvider.jsx';
 
 const Stack = createNativeStackNavigator();
@@ -42,6 +42,9 @@ export default function App() {
                   options={{ headerShown: false }}
               />
               <Stack.Screen name="Habit" component={HabitNavigation}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen name="Edit Profile" component={EditProfile}
                 options={{ headerShown: false }}
               />
 

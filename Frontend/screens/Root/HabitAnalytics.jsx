@@ -3,7 +3,7 @@ import { SafeAreaView, View, Text, StyleSheet } from 'react-native';
 import {Calendar} from 'react-native-calendars';
 import Octicons from 'react-native-vector-icons/Octicons';
 import { AuthContent } from '../../components/GlobalDataComponents/AuthProvider';
-import axios from 'axios';
+import axios, { all } from 'axios';
 import { useFocusEffect } from '@react-navigation/native';
 
 const HabitAnalytics = () => {
@@ -93,7 +93,66 @@ const HabitAnalytics = () => {
 
   useEffect(()=>{
     findMostCompletedTasks();
+    // generateMarkedDates();
   },[habitData, completedHabitData])
+
+
+  // const generateDatesInRange = (startDate, endDate) => {
+  //   const dates = [];
+  //   const currentDate = new Date(startDate);
+  //   const lastDate = new Date(endDate);
+    
+  //   while (currentDate <= lastDate) {
+  //     dates.push(new Date(currentDate));
+  //     currentDate.setDate(currentDate.getDate() + 1);
+  //   }
+    
+  //   return dates;
+  // };
+
+  // const generateMarkedDates = () => {
+  //   const allCompletedDates = [];
+  //   const partiallyCompletedDates = [];
+  //   const incompleteDates = [];
+
+  //   console.log(allCompletedDates);
+  
+  //   const startDate = new Date('2024-01-01');
+  //   const endDate = new Date('2029-12-31');
+  //   const datesInRange = generateDatesInRange(startDate, endDate);
+    
+  //   for (let date of datesInRange) {
+  //     const tasksForDate = habitData.filter(task => {
+  //       const dayOfWeek = new Date(date).getDay(); // Get the day of the week (0 for Sunday, 1 for Monday, etc.)
+  //       return task.repeatDays.includes(dayOfWeek);
+  //     });
+  //     const completedTasksForDate = completedHabitData.filter(task => task.date === date);
+      
+  //     if (tasksForDate.length > 0) {
+  //       if (completedTasksForDate.length === tasksForDate.length) {
+  //         allCompletedDates.push(date);
+  //       } else if (completedTasksForDate.length > 0) {
+  //         partiallyCompletedDates.push(date);
+  //       } else {
+  //         incompleteDates.push(date);
+  //       }
+  //     }
+  //   }
+  
+  //   return {
+  //     allCompleted: convertToMarkedDates(allCompletedDates, '#ad9ded'),
+  //     partiallyCompleted: convertToMarkedDates(partiallyCompletedDates, '#836cdd'),
+  //     incomplete: convertToMarkedDates(incompleteDates, '#d1c9f2')
+  //   };
+  // };
+  
+  // const convertToMarkedDates = (datesArray, color) => {
+  //   const marked = {};
+  //   datesArray.forEach(date => {
+  //     marked[date] = { marked: true, dotColor: color, activeOpacity: 0 };
+  //   });
+  //   return marked;
+  // };
   
   return (
     <SafeAreaView>
