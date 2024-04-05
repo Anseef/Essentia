@@ -77,7 +77,7 @@ const Profile = () => {
               <Icon name='arrow-forward-ios' size={ 20 }/>
             </Pressable>
 
-            <Pressable style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20 }}>
+            <Pressable onPress={()=> navigation.navigate('Terms and Conditions')} style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20 }}>
               <View style={{flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 20}}>
                 <FontAwesomeIcons style={{paddingLeft: 2}} name='clipboard-check' size={ 20 }/>
                 <Text style={styles.bottomContainerText}>Terms & Conditions</Text>
@@ -85,7 +85,7 @@ const Profile = () => {
               <Icon name='arrow-forward-ios' size={ 20 }/>
             </Pressable>
 
-            <Pressable style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20 }}>
+            <Pressable onPress={()=> navigation.navigate('About Us')} style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20 }}>
               <View style={{flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 20}}>
                 <FontAwesomeIcons name='circle-exclamation' size={ 19 }/>
                 <Text style={styles.bottomContainerText}>About us</Text>
@@ -101,18 +101,7 @@ const Profile = () => {
               <Icon name='arrow-forward-ios' size={ 20 }/>
             </Pressable>
         </View>
-
       </View>
-
-      {/* <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'space-between'}}>
-        <Pressable onPress={()=>navigation.navigate('Edit Profile')} style={[styles.buttonStyle, { backgroundColor: '#836cdd', borderColor: '#836cdd' }]}>
-          <Text style={[styles.buttonText, { color: '#fff' }]}>Edit Profile</Text>
-        </Pressable>
-
-        <Pressable onPress={handleLogOut} style={[styles.buttonStyle, { backgroundColor: '#836cdd', borderColor: '#836cdd' }]}>
-          <Text style={[styles.buttonText, { color: '#fff' }]}>Logout</Text>
-        </Pressable>
-      </View> */}
     </View>
   );
 };

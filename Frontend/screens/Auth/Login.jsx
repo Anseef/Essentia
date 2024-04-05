@@ -51,6 +51,7 @@ const Login = () => {
         console.log("Login Successful");
         setUserToken(response.data.data);
         setIsLoggedIn(true);
+        clearAllFields();
         navigation.navigate('Essentia');
       } else {
         setError(response.data.message);
@@ -60,6 +61,11 @@ const Login = () => {
       setError('An unexpected error occurred. Please try again later.');
     }
   };
+  
+  const clearAllFields = () => {
+    setEmail('');
+    setPassword('');
+  }
 
   return (
     <LinearGradient colors={["#bf9cf0", "#d0cae9" ]} style={styles.container}>

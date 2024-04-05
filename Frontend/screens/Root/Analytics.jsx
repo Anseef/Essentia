@@ -3,6 +3,8 @@ import { SelectList } from 'react-native-dropdown-select-list'
 import React, { useEffect, useState } from 'react'
 import FoodAnalytics from './FoodAnalytics'
 import HabitAnalytics from './HabitAnalytics'
+import ExpenseAnalytics from './ExpenseAnalytics'
+import HeathAnalytics from './HeathAnalytics'
 
 const Analytics = () => {
   const [dateRange, setDateRange] = useState('Weekly');
@@ -58,6 +60,10 @@ const Analytics = () => {
         <FoodAnalytics onSelectDateRange={handleSelectedDateRange} />
       ) : selectedComponent === 'Habits' ? (
         <HabitAnalytics />
+      ) : selectedComponent === 'Health' ? (
+        <HeathAnalytics />
+      ) : selectedComponent === 'Expenses' ? (
+        <ExpenseAnalytics />
       ) : null
       }
     </View>

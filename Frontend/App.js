@@ -9,6 +9,8 @@ import FoodNavigation from './screens/Food/FoodNavigation.jsx';
 import HabitNavigation from './screens/Habit/HabitNavigation.jsx';
 import EditProfile from './screens/Root/EditProfile.jsx';
 import { AuthProvider } from './components/GlobalDataComponents/AuthProvider.jsx';
+import TermsAndConditions from './screens/Root/TermsAndCondition.jsx';
+import AboutUsPage from './screens/Root/AboutUsPage.jsx';
 
 const Stack = createNativeStackNavigator();
 
@@ -47,6 +49,12 @@ export default function App() {
               <Stack.Screen name="Edit Profile" component={EditProfile}
                 options={{ headerShown: false }}
               />
+              <Stack.Screen name="Terms and Conditions" component={TermsAndConditions}
+                options={ optionStyle }
+              />
+              <Stack.Screen name="About Us" component={AboutUsPage}
+                options={ optionStyle }
+              />
 
             </Stack.Navigator>
           </NavigationContainer>
@@ -56,7 +64,7 @@ export default function App() {
 }
 
 const optionStyle = {
-  headerStyle: { backgroundColor: '#836cdd', elevation: 0 },
-  headerTitleStyle: { color: '#fff',fontFamily:'Bold',fontSize: 19,textAlign: 'left' },
-  headerTintColor: '#fff',
+  headerStyle: { backgroundColor: '#fff', elevation: 0 },
+  headerTitleStyle: { color: 'black',fontFamily:'Bold',fontSize: 19,textAlign: 'left' },
+  headerTintColor: 'black',
 }
